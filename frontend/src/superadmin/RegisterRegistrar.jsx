@@ -35,45 +35,45 @@ import LoadingOverlay from "../components/LoadingOverlay";
 
 
 const RegisterRegistrar = () => {
-    
-const settings = useContext(SettingsContext);
 
-  const [titleColor, setTitleColor] = useState("#000000");
-  const [subtitleColor, setSubtitleColor] = useState("#555555");
-  const [borderColor, setBorderColor] = useState("#000000");
-  const [mainButtonColor, setMainButtonColor] = useState("#1976d2");
-  const [subButtonColor, setSubButtonColor] = useState("#ffffff");   // ✅ NEW
-  const [stepperColor, setStepperColor] = useState("#000000");       // ✅ NEW
+    const settings = useContext(SettingsContext);
 
-  const [fetchedLogo, setFetchedLogo] = useState(null);
-  const [companyName, setCompanyName] = useState("");
-  const [shortTerm, setShortTerm] = useState("");
-  const [campusAddress, setCampusAddress] = useState("");
+    const [titleColor, setTitleColor] = useState("#000000");
+    const [subtitleColor, setSubtitleColor] = useState("#555555");
+    const [borderColor, setBorderColor] = useState("#000000");
+    const [mainButtonColor, setMainButtonColor] = useState("#1976d2");
+    const [subButtonColor, setSubButtonColor] = useState("#ffffff");   // ✅ NEW
+    const [stepperColor, setStepperColor] = useState("#000000");       // ✅ NEW
 
-  useEffect(() => {
-    if (!settings) return;
+    const [fetchedLogo, setFetchedLogo] = useState(null);
+    const [companyName, setCompanyName] = useState("");
+    const [shortTerm, setShortTerm] = useState("");
+    const [campusAddress, setCampusAddress] = useState("");
 
-    // 🎨 Colors
-    if (settings.title_color) setTitleColor(settings.title_color);
-    if (settings.subtitle_color) setSubtitleColor(settings.subtitle_color);
-    if (settings.border_color) setBorderColor(settings.border_color);
-    if (settings.main_button_color) setMainButtonColor(settings.main_button_color);
-    if (settings.sub_button_color) setSubButtonColor(settings.sub_button_color);   // ✅ NEW
-    if (settings.stepper_color) setStepperColor(settings.stepper_color);           // ✅ NEW
+    useEffect(() => {
+        if (!settings) return;
 
-    // 🏫 Logo
-    if (settings.logo_url) {
-      setFetchedLogo(`http://localhost:5000${settings.logo_url}`);
-    } else {
-      setFetchedLogo(EaristLogo);
-    }
+        // 🎨 Colors
+        if (settings.title_color) setTitleColor(settings.title_color);
+        if (settings.subtitle_color) setSubtitleColor(settings.subtitle_color);
+        if (settings.border_color) setBorderColor(settings.border_color);
+        if (settings.main_button_color) setMainButtonColor(settings.main_button_color);
+        if (settings.sub_button_color) setSubButtonColor(settings.sub_button_color);   // ✅ NEW
+        if (settings.stepper_color) setStepperColor(settings.stepper_color);           // ✅ NEW
 
-    // 🏷️ School Information
-    if (settings.company_name) setCompanyName(settings.company_name);
-    if (settings.short_term) setShortTerm(settings.short_term);
-    if (settings.campus_address) setCampusAddress(settings.campus_address);
+        // 🏫 Logo
+        if (settings.logo_url) {
+            setFetchedLogo(`http://localhost:5000${settings.logo_url}`);
+        } else {
+            setFetchedLogo(EaristLogo);
+        }
 
-  }, [settings]); 
+        // 🏷️ School Information
+        if (settings.company_name) setCompanyName(settings.company_name);
+        if (settings.short_term) setShortTerm(settings.short_term);
+        if (settings.campus_address) setCampusAddress(settings.campus_address);
+
+    }, [settings]);
 
 
     // Also put it at the very top
@@ -231,48 +231,45 @@ const settings = useContext(SettingsContext);
 
         try {
             const fd = new FormData();
-            // append all text fields
+
+            // append all fields
             Object.entries(form).forEach(([key, value]) => {
-                if (value !== null && key !== "preview") {
+                if (value !== null && value !== undefined) {
                     fd.append(key, value);
                 }
             });
 
+            // Ensure numbers
+            if (form.dprtmnt_id) fd.set("dprtmnt_id", Number(form.dprtmnt_id));
+            if (form.status) fd.set("status", Number(form.status));
+
+            // Debug
+            for (let pair of fd.entries()) console.log(pair[0], pair[1]);
+
             if (editData) {
-                // 🟢 Update existing registrar
-                await axios.post(`http://localhost:5000/update_registrar/${editData.id}`, fd, {
+                // 🔹 EDIT existing registrar
+                await axios.put(`http://localhost:5000/update_registrar/${editData.id}`, fd, {
                     headers: { "Content-Type": "multipart/form-data" },
                 });
             } else {
-                // 🟢 Add new registrar
+                // 🔹 ADD new registrar
                 await axios.post("http://localhost:5000/register_registrar", fd, {
                     headers: { "Content-Type": "multipart/form-data" },
                 });
             }
 
-
             setOpenSnackbar(true);
             setOpenDialog(false);
             setEditData(null);
-            setForm({
-                employee_id: "",
-                last_name: "",
-                middle_name: "",
-                first_name: "",
-                role: "registrar",
-                email: "",
-                password: "",
-                status: "",
-                dprtmnt_id: "",
-                profile_picture: null,
-                preview: "",
-            });
             fetchRegistrars();
         } catch (err) {
             console.error("❌ Submit error:", err);
             setErrorMessage(err.response?.data?.message || "Something went wrong");
         }
     };
+
+
+
 
     const handleEdit = (r) => {
         setEditData(r);
@@ -354,7 +351,7 @@ const settings = useContext(SettingsContext);
         <Box sx={{ height: "calc(100vh - 150px)", overflowY: "auto", pr: 1 }}>
             <Box display="flex" justifyContent="space-between" alignItems="center" mb={2} >
                 {/* Left: Header */}
-                <Typography variant="h4" fontWeight="bold" sx={{color: titleColor}}>
+                <Typography variant="h4" fontWeight="bold" sx={{ color: titleColor }}>
                     REGISTRAR ACCOUNTS
                 </Typography>
 
@@ -374,9 +371,9 @@ const settings = useContext(SettingsContext);
                             <TableCell
                                 colSpan={10}
                                 sx={{
-                                   border: `2px solid ${borderColor}`,
+                                    border: `2px solid ${borderColor}`,
                                     py: 0.5,
-                              backgroundColor: settings?.header_color || "#1976d2",
+                                    backgroundColor: settings?.header_color || "#1976d2",
                                     color: "white"
                                 }}
                             >
@@ -546,7 +543,7 @@ const settings = useContext(SettingsContext);
                 sx={{
                     width: "100%",
 
-                    border: `2px solid ${borderColor}` ,
+                    border: `2px solid ${borderColor}`,
 
                 }}
             >
@@ -654,7 +651,7 @@ const settings = useContext(SettingsContext);
                 </Table>
             </TableContainer>
 
-            <TableContainer component={Paper} sx={{ width: "100%",border: `2px solid ${borderColor}`,  mb: 4 }}>
+            <TableContainer component={Paper} sx={{ width: "100%", border: `2px solid ${borderColor}`, mb: 4 }}>
                 <Table>
                     <TableHead sx={{ backgroundColor: settings?.header_color || "#1976d2", }}>
                         <TableRow>
@@ -676,7 +673,7 @@ const settings = useContext(SettingsContext);
                                         color: "white",
                                         fontWeight: "bold",
                                         textAlign: "center",
-                                       border: `2px solid ${borderColor}` 
+                                        border: `2px solid ${borderColor}`
                                     }}
                                 >
                                     {header}
@@ -691,12 +688,12 @@ const settings = useContext(SettingsContext);
                                 <TableRow key={r.id}>
                                     <TableCell sx={{ textAlign: "center", border: `2px solid ${borderColor}` }}>{r.employee_id}</TableCell>
 
-                                    <TableCell sx={{ textAlign: "center", border: `2px solid ${borderColor}`  }}>
+                                    <TableCell sx={{ textAlign: "center", border: `2px solid ${borderColor}` }}>
                                         {r.profile_picture ? (
                                             <Avatar
                                                 src={`http://localhost:5000/uploads/${r.profile_picture}`}
                                                 alt={r.first_name}
-                                                sx={{ width: 60, height: 60, margin: "auto",border: `2px solid ${borderColor}`  }}
+                                                sx={{ width: 60, height: 60, margin: "auto", border: `2px solid ${borderColor}` }}
                                             />
                                         ) : (
                                             <Avatar sx={{ bgcolor: "#6D2323", margin: "auto" }}>
@@ -705,17 +702,17 @@ const settings = useContext(SettingsContext);
                                         )}
                                     </TableCell>
 
-                                    <TableCell sx={{ textAlign: "center",border: `2px solid ${borderColor}`  }}>
+                                    <TableCell sx={{ textAlign: "center", border: `2px solid ${borderColor}` }}>
                                         {`${r.first_name || ""} ${r.middle_name || ""} ${r.last_name || ""}`}
                                     </TableCell>
 
-                                    <TableCell sx={{ textAlign: "center", border: `2px solid ${borderColor}`  }}>{r.email}</TableCell>
+                                    <TableCell sx={{ textAlign: "center", border: `2px solid ${borderColor}` }}>{r.email}</TableCell>
 
-                                    <TableCell sx={{ textAlign: "center", border: `2px solid ${borderColor}`  }}>
+                                    <TableCell sx={{ textAlign: "center", border: `2px solid ${borderColor}` }}>
                                         {r.dprtmnt_name || "N/A"}
                                     </TableCell>
 
-                                    <TableCell sx={{ textAlign: "center",border: `2px solid ${borderColor}`  }}>
+                                    <TableCell sx={{ textAlign: "center", border: `2px solid ${borderColor}` }}>
                                         {r.role || "Registrar"}
                                     </TableCell>
 
@@ -739,7 +736,7 @@ const settings = useContext(SettingsContext);
                                     </TableCell>
 
                                     {/* ✅ STATUS TOGGLE BUTTON */}
-                                    <TableCell sx={{ border: `2px solid ${borderColor}`  }}>
+                                    <TableCell sx={{ border: `2px solid ${borderColor}` }}>
                                         <Button
                                             onClick={() => handleToggleStatus(r.id, r.status)}
                                             sx={{
@@ -796,7 +793,7 @@ const settings = useContext(SettingsContext);
                                 sx={{
                                     width: 80,
                                     height: 80,
-                                   border: `2px solid ${borderColor}`,
+                                    border: `2px solid ${borderColor}`,
                                     boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
                                 }}
                             />
@@ -920,7 +917,7 @@ const settings = useContext(SettingsContext);
                         variant="contained"
                         onClick={handleSubmit}
                         sx={{
-                          backgroundColor: mainButtonColor, 
+                            backgroundColor: mainButtonColor,
                             "&:hover": { backgroundColor: "#000000" },
                             fontWeight: "bold",
                         }}

@@ -1245,7 +1245,7 @@ const HealthRecord = () => {
                                         marginTop: "5px",
                                         textAlign: "right", // since we’ll use margin for positioning
                                         marginRight: "-48%", // adjust until text sits between columns 6–8
-                                        marginBottom: "30px"
+                                        marginBottom: "70px"
                                     }}
                                 >
                                     Page 1 of 2

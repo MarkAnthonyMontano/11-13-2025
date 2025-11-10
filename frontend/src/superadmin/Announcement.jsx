@@ -226,103 +226,114 @@ function Announcement() {
     }
 
 
-return (
-    <>
-        {/* Header */}
-        <Box>
-            <Box display="flex" alignItems="center">
-                <CampaignIcon color="primary" sx={{ fontSize: 40, mr: 2 }} />
-                <Typography variant="h4" fontWeight="bold" style={{ color: titleColor }}>
-                    ANNOUNCEMENT
-                </Typography>
+    return (
+        <>
+            {/* Header */}
+            <Box>
+                <Box display="flex" alignItems="center">
+                    <CampaignIcon color="primary" sx={{ fontSize: 40, mr: 2 }} />
+                    <Typography variant="h4" fontWeight="bold" style={{ color: titleColor }}>
+                        ANNOUNCEMENT
+                    </Typography>
+                </Box>
+                <br />
+                <hr style={{ border: "1px solid #ccc", width: "100%" }} />
             </Box>
-            <br />
-            <hr style={{ border: "1px solid #ccc", width: "100%" }} />
-        </Box>
 
-        {/* Main */}
-        <Container maxWidth="lg" sx={{ py: 2, height: "calc(100vh - 150px)" }}>
-            <Grid container spacing={4} sx={{ height: "100%" }}>
-                {/* Left: Form */}
-                <Grid item xs={12} md={5}>
-                    <PaperForm
-                        form={form}
-                        setForm={setForm}
-                        handleSubmit={handleSubmit}
-                        editingId={editingId}
-                        image={image}
-                        setImage={setImage}
-                        borderColor={borderColor}
-                        mainButtonColor={mainButtonColor}
-                        subtitleColor={subtitleColor} // ✅ Apply subtitleColor to Form title
-                    />
+            {/* Main */}
+            <Container maxWidth="lg" sx={{ py: 2, height: "calc(100vh - 150px)" }}>
+                <Grid container spacing={4} sx={{ height: "100%" }}>
+                    {/* Left: Form */}
+                    <Grid item xs={12} md={5}>
+                        <PaperForm
+                            form={form}
+                            setForm={setForm}
+                            handleSubmit={handleSubmit}
+                            editingId={editingId}
+                            image={image}
+                            setImage={setImage}
+                            borderColor={borderColor}
+                            mainButtonColor={mainButtonColor}
+                            subtitleColor={subtitleColor} // ✅ Apply subtitleColor to Form title
+                        />
+                    </Grid>
+
+                    {/* Right: Active Announcements */}
+                    <Grid item xs={12} md={7} sx={{ display: "flex", flexDirection: "column", height: "95%" }}>
+                        <Box
+                            sx={{
+                                flexGrow: 1,
+                                overflowY: "auto",
+                                height: "100%",
+                                pr: 1,
+                                p: 2,
+                                border: `2px solid ${borderColor}`,
+                                borderRadius: 2,
+                            }}
+                        >
+                            {/* Active Announcements Title */}
+                            <Typography variant="h5" gutterBottom sx={{ color: subtitleColor }}>
+                                Active Announcements
+                            </Typography>
+
+                            {announcements.length === 0 ? (
+                                <Typography color="text.secondary">No active announcements.</Typography>
+                            ) : (
+                                <Grid container spacing={2}>
+                                    {announcements.map((a) => (
+                                        <Grid item xs={12} key={a.id}>
+                                            <Card elevation={3} sx={{ borderRadius: 2, border: `2px solid ${borderColor}` }}>
+                                                {a.file_path && (
+                                                    <CardMedia
+                                                        component="img"
+                                                        height="200"
+                                                        image={`http://localhost:5000/uploads/${a.file_path}`}
+                                                        alt={a.title}
+                                                        sx={{ objectFit: "cover" }}
+                                                    />
+                                                )}
+
+                                                <CardContent>
+                                                    <Typography variant="h6">{a.title}</Typography>
+                                                    <Typography variant="body2" sx={{ mb: 1 }}>
+                                                        {a.content}
+                                                    </Typography>
+                                                    <Typography variant="caption" color="text.secondary" display="block">
+                                                        For: {a.target_role}
+                                                    </Typography>
+                                                    <Typography variant="caption" color="text.secondary">
+                                                        Expires: {new Date(a.expires_at).toLocaleString()}
+                                                    </Typography>
+                                                </CardContent>
+
+                                                <CardActions>
+                                                    <Button
+                                                        size="small"
+                                                        sx={{ border: "2px solid black", backgroundColor: "green", color: "white" }}
+                                                        onClick={() => handleEdit(a)}
+                                                    >
+                                                        Edit
+                                                    </Button>
+                                                    <Button
+                                                        size="small"
+                                                        sx={{ border: "2px solid black", backgroundColor: "maroon", color: "white" }}
+                                                        onClick={() => handleDelete(a.id)}
+                                                    >
+                                                        Delete
+                                                    </Button>
+                                                </CardActions>
+                                            </Card>
+                                        </Grid>
+                                    ))}
+
+                                </Grid>
+                            )}
+                        </Box>
+                    </Grid>
                 </Grid>
-
-                {/* Right: Active Announcements */}
-                <Grid item xs={12} md={7} sx={{ display: "flex", flexDirection: "column", height: "95%" }}>
-                    <Box
-                        sx={{
-                            flexGrow: 1,
-                            overflowY: "auto",
-                            height: "100%",
-                            pr: 1,
-                            p: 2,
-                            border: `2px solid ${borderColor}`,
-                            borderRadius: 2,
-                        }}
-                    >
-                        {/* Active Announcements Title */}
-                        <Typography variant="h5" gutterBottom sx={{ color: subtitleColor }}> 
-                            Active Announcements
-                        </Typography>
-
-                        {announcements.length === 0 ? (
-                            <Typography color="text.secondary">No active announcements.</Typography>
-                        ) : (
-                            <Grid container spacing={2}>
-                                {announcements.map((a) => (
-                                    <Grid item xs={12} key={a.id}>
-                                        <Card elevation={3} sx={{ borderRadius: 2, border: `2px solid ${borderColor}` }}>
-                                            <CardContent>
-                                                <Typography variant="h6">{a.title}</Typography>
-                                                <Typography variant="body2" sx={{ mb: 1 }}>
-                                                    {a.content}
-                                                </Typography>
-                                                <Typography variant="caption" color="text.secondary" display="block">
-                                                    For: {a.target_role}
-                                                </Typography>
-                                                <Typography variant="caption" color="text.secondary">
-                                                    Expires: {new Date(a.expires_at).toLocaleString()}
-                                                </Typography>
-                                            </CardContent>
-
-                                            <CardActions>
-                                                <Button
-                                                    size="small"
-                                                    sx={{ border: "2px solid black", backgroundColor: "green", color: "white" }}
-                                                    onClick={() => handleEdit(a)}
-                                                >
-                                                    Edit
-                                                </Button>
-                                                <Button
-                                                    size="small"
-                                                    sx={{ border: "2px solid black", backgroundColor: "maroon", color: "white" }}
-                                                    onClick={() => handleDelete(a.id)}
-                                                >
-                                                    Delete
-                                                </Button>
-                                            </CardActions>
-                                        </Card>
-                                    </Grid>
-                                ))}
-                            </Grid>
-                        )}
-                    </Box>
-                </Grid>
-            </Grid>
-        </Container>
-    </>
-);
+            </Container>
+        </>
+    );
 
 }
 

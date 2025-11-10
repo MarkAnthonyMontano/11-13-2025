@@ -188,6 +188,7 @@ const settings = useContext(SettingsContext);
 
   const divToPrintRef = useRef();
 
+ 
   const printDiv = () => {
     const divToPrint = divToPrintRef.current;
     if (divToPrint) {
@@ -219,7 +220,7 @@ const settings = useContext(SettingsContext);
       }
 
          .student-table {
-    margin-top: 160px !important;
+    margin-top: 170px !important;
   }
 
 
@@ -246,6 +247,7 @@ const settings = useContext(SettingsContext);
       console.error("divToPrintRef is not set.");
     }
   };
+
 
   const [curriculumOptions, setCurriculumOptions] = useState([]);
 
@@ -331,7 +333,7 @@ return (
           variant="h4"
           sx={{
             fontWeight: "bold",
-         color: titleColor,
+            color: titleColor,
             fontSize: "36px",
             textAlign: "left",
           }}

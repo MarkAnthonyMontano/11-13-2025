@@ -211,6 +211,22 @@ export default function EmailTemplateManager() {
     setSnack((prev) => ({ ...prev, open: false }));
   };
 
+
+  const [departments, setDepartments] = useState([]);
+
+  useEffect(() => {
+    const fetchDepartments = async () => {
+      try {
+        const res = await axios.get("http://localhost:5000/api/departments"); // create this API
+        setDepartments(res.data || []);
+      } catch (err) {
+        console.error("Failed to fetch departments", err);
+      }
+    };
+    fetchDepartments();
+  }, []);
+
+
   // 🔒 Disable right-click + block dev tools
   document.addEventListener("contextmenu", (e) => e.preventDefault());
   document.addEventListener("keydown", (e) => {
@@ -294,7 +310,7 @@ export default function EmailTemplateManager() {
             elevation={3}
             sx={{ p: 3, border: `2px solid ${borderColor}`, borderRadius: 2 }}
           >
-            <Typography variant="h6" sx={{ mb: 2, color: subtitleColor,  }}>
+            <Typography variant="h6" sx={{ mb: 2, color: subtitleColor, }}>
               {editing ? "Edit Email Template" : "Register New Template"}
             </Typography>
 
@@ -309,6 +325,24 @@ export default function EmailTemplateManager() {
               }
               sx={{ mb: 2 }}
             />
+            <Typography fontWeight={500}>Department:</Typography>
+            <TextField
+              select
+              fullWidth
+
+              value={form.department_id || ""}
+              onChange={(e) => setForm({ ...form, department_id: e.target.value })}
+              sx={{ mb: 2 }}
+              SelectProps={{ native: true }}
+            >
+              <option value="">Select Department</option>
+              {departments.map((d) => (
+                <option key={d.dprtmnt_id} value={d.dprtmnt_id}>
+                  {d.dprtmnt_name}
+                </option>
+              ))}
+            </TextField>
+
 
             <FormControlLabel
               control={
@@ -352,56 +386,70 @@ export default function EmailTemplateManager() {
               <Table stickyHeader size="small">
                 <TableHead>
                   <TableRow>
-                    <TableCell sx={{ fontWeight: "bold" }}>
-                      Gmail Account
-                    </TableCell>
+                    <TableCell sx={{ fontWeight: "bold" }}>#</TableCell>
+                    <TableCell sx={{ fontWeight: "bold" }}>Gmail Account</TableCell>
+                    <TableCell sx={{ fontWeight: "bold" }}>Department</TableCell>
                     <TableCell sx={{ fontWeight: "bold" }}>Active</TableCell>
-                    <TableCell sx={{ fontWeight: "bold" }}>Actions</TableCell>
+                    <TableCell sx={{ fontWeight: "bold", width: "150px" }}>Actions</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {rows.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={3} align="center">
+                      <TableCell colSpan={4} align="center">
                         No templates found.
                       </TableCell>
                     </TableRow>
                   ) : (
-                    rows.map((r) => (
+                    rows.map((r, index) => (
                       <TableRow key={r.template_id}>
+                        {/* Auto-increment index */}
+                        <TableCell>{index + 1}</TableCell>
+
+                        {/* Gmail Account */}
                         <TableCell>{r.sender_name}</TableCell>
+
+                        {/* Department Name */}
+                        <TableCell>{r.department_name || "N/A"}</TableCell>
+
+                        {/* Active */}
                         <TableCell>{r.is_active ? "Yes" : "No"}</TableCell>
-                        <TableCell>
-                          <Button
-                            variant="contained"
-                            size="small"
-                            sx={{
-                              backgroundColor: "#4CAF50",
-                              color: "white",
-                              marginRight: 1,
-                              "&:hover": { backgroundColor: "#45A049" },
-                            }}
-                            onClick={() => handleEdit(r)}
-                          >
-                            Edit
-                          </Button>
-                          <Button
-                            variant="contained"
-                            size="small"
-                            sx={{
-                              backgroundColor: "#B22222",
-                              color: "white",
-                              "&:hover": { backgroundColor: "#8B0000" },
-                            }}
-                            onClick={() => handleDelete(r.template_id)}
-                          >
-                            Delete
-                          </Button>
-                        </TableCell>
+
+                        {/* Actions */}
+                     <TableCell sx={{ width: "150px" }}>
+  <Box sx={{ display: "flex", gap: 1 }}>
+    <Button
+      variant="contained"
+      size="small"
+      sx={{
+        backgroundColor: "#4CAF50",
+        color: "white",
+        "&:hover": { backgroundColor: "#45A049" },
+      }}
+      onClick={() => handleEdit(r)}
+    >
+      Edit
+    </Button>
+    <Button
+      variant="contained"
+      size="small"
+      sx={{
+        backgroundColor: "#B22222",
+        color: "white",
+        "&:hover": { backgroundColor: "#8B0000" },
+      }}
+      onClick={() => handleDelete(r.template_id)}
+    >
+      Delete
+    </Button>
+  </Box>
+</TableCell>
+
                       </TableRow>
                     ))
                   )}
                 </TableBody>
+
               </Table>
             </Box>
           </Paper>

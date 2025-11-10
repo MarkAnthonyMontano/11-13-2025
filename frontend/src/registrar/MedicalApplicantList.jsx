@@ -399,11 +399,7 @@ const settings = useContext(SettingsContext);
                 normalize(personData.document_status) === normalize(selectedApplicantStatus);
 
             // (keep your registrar filter; shown here with the earlier mapping)
-            const matchesRegistrarStatus =
-                selectedRegistrarStatus === "" ||
-                (selectedRegistrarStatus === "Submitted" && personData.registrar_status === 1) ||
-                (selectedRegistrarStatus === "Unsubmitted / Incomplete" && personData.registrar_status === 0);
-
+  
             const programInfo = allCurriculums.find(
                 (opt) => opt.curriculum_id?.toString() === personData.program?.toString()
             );
@@ -451,7 +447,6 @@ const settings = useContext(SettingsContext);
                 matchesSearch &&
                 matchesCampus &&
                 matchesApplicantStatus &&
-                matchesRegistrarStatus &&
                 matchesSubmittedDocs &&
                 matchesDepartment &&
                 matchesProgram &&
@@ -799,10 +794,10 @@ const settings = useContext(SettingsContext);
                             month: "short",
                             day: "2-digit",
                         })}</td>
-                         <td>${person.registrar_status === 1
-                            ? "Submitted"
-                            : person.registrar_status === 0
-                                ? "Unsubmitted / Incomplete"
+                         <td>${person.submitted_medical === 1
+                            ? "On Process"
+                            : person.submitted_medical === 0
+                                ? "On going"
                                 : ""
                         }</td>
                        </tr>
@@ -1547,151 +1542,13 @@ const settings = useContext(SettingsContext);
 
 
 
-                                {/*
-                                <TableCell sx={{ textAlign: "center", border: `2px solid ${borderColor}` }}>
-                                    {person.registrar_status === 1 ? (
-                                        <Box
-                                            sx={{
-                                                background: "#4CAF50",
-                                                color: "white",
-                                                borderRadius: 1,
-                                                p: 0.5,
-                                            }}
-                                        >
-                                            <Typography sx={{ fontWeight: "bold" }}>Submitted</Typography>
-                                        </Box>
-                                    ) : person.registrar_status === 0 ? (
-                                        <Box
-                                            sx={{
-                                                background: "#F44336",
-                                                color: "white",
-                                                borderRadius: 1,
-                                                p: 0.5,
-                                            }}
-                                        >
-                                            <Typography sx={{ fontWeight: "bold" }}>
-                                                Unsubmitted / Incomplete
-                                            </Typography>
-                                        </Box>
-                                    ) : (
-                                        <Box display="flex" justifyContent="center" gap={1}>
-                                            <Button
-                                                variant="contained"
-                                                onClick={() => {
-                                                    setConfirmMessage(
-                                                        "Are you sure you want to set Registrar Status to Submitted?"
-                                                    );
-                                                    setConfirmAction(() => async () => {
-                                                        await handleRegistrarStatusChange(person.person_id, 1);
-                                                    });
-                                                    setConfirmOpen(true);
-                                                }}
-                                                sx={{ backgroundColor: "green", color: "white" }}
-                                            >
-                                                Submitted
-                                            </Button>
-                                            <Button
-                                                variant="contained"
-                                                onClick={() => {
-                                                    setConfirmMessage(
-                                                        "Are you sure you want to set Registrar Status to Unsubmitted?"
-                                                    );
-                                                    setConfirmAction(() => async () => {
-                                                        await handleRegistrarStatusChange(person.person_id, 0);
-                                                    });
-                                                    setConfirmOpen(true);
-                                                }}
-                                                sx={{ backgroundColor: "red", color: "white" }}
-                                            >
-                                                Unsubmitted
-                                            </Button>
-                                        </Box>
-                                    )}
-                                </TableCell>
-                                */}
+                              
                             </TableRow>
                         ))}
                     </TableBody>
 
 
 
-                    <Dialog open={openDialog} onClose={handleCloseDialog}>
-                        <DialogTitle
-                            sx={{
-                                fontWeight: "bold",
-                                textAlign: "center",
-                                color:
-                                    Array.isArray(activePerson?.missing_documents) &&
-                                        activePerson.missing_documents.length === 0 &&
-                                        activePerson?.submitted_documents === 1 &&
-                                        activePerson?.registrar_status === 1
-                                        ? "#4CAF50"
-                                        : "maroon",
-                            }}
-                        >
-                            {Array.isArray(activePerson?.missing_documents) &&
-                                activePerson.missing_documents.length === 0 &&
-                                activePerson?.submitted_documents === 1 &&
-                                activePerson?.registrar_status === 1
-                                ? "✅ Completed All Documents"
-                                : "Mark Missing Documents"}
-                        </DialogTitle>
-
-                        <DialogContent>
-                            {documentOptions.map((doc) => {
-                                const selectedArray = Array.isArray(activePerson?.missing_documents)
-                                    ? activePerson.missing_documents
-                                    : [];
-
-                                // 👉 Completed lang kung walang missing docs + naka-submit
-                                const isCompleted =
-                                    selectedArray.length === 0 &&
-                                    activePerson?.submitted_documents === 1 &&
-                                    activePerson?.registrar_status === 1;
-
-                                return (
-                                    <FormControlLabel
-                                        key={doc.key}
-                                        control={
-                                            <Checkbox
-                                                checked={isCompleted ? true : selectedArray.includes(doc.key)}
-                                                disabled={isCompleted} // disable only kapag completed talaga
-                                                onChange={(e) => {
-                                                    if (isCompleted) return; // block changes if completed
-                                                    const updated = e.target.checked
-                                                        ? [...selectedArray, doc.key]
-                                                        : selectedArray.filter((x) => x !== doc.key);
-
-                                                    setActivePerson((prev) =>
-                                                        prev ? { ...prev, missing_documents: updated } : prev
-                                                    );
-                                                }}
-                                            />
-                                        }
-                                        label={doc.label}
-                                    />
-                                );
-                            })}
-                        </DialogContent>
-
-                        <DialogActions>
-                            <Button onClick={handleCloseDialog}>Cancel</Button>
-                            {!(
-                                Array.isArray(activePerson?.missing_documents) &&
-                                activePerson.missing_documents.length === 0 &&
-                                activePerson?.submitted_documents === 1 &&
-                                activePerson?.registrar_status === 1
-                            ) && (
-                                    <Button
-                                        variant="contained"
-                                        onClick={handleSaveMissingDocs}
-                                        sx={{ background: "maroon" }}
-                                    >
-                                        Save
-                                    </Button>
-                                )}
-                        </DialogActions>
-                    </Dialog>
 
 
 

@@ -94,26 +94,27 @@ const LoginEnrollment = ({ setIsAuthenticated }) => {
 
       const res = await axios.post(apiUrl, { email, password });
 
-      // 🔒 If locked, disable login button
+      // 🔒 If locked, disable login button for 3 minutes (180 seconds)
       if (res.data.message?.includes("Locked")) {
-        setLockout(true);
-        setSnack({ open: true, message: res.data.message, severity: "error" });
+        if (!lockout) { // Prevent multiple timers
+          setLockout(true);
+          setSnack({ open: true, message: res.data.message, severity: "error" });
 
-        // Extract 3 minutes = 180 seconds
-        let timeLeft = 180;
-        setLockoutTimer(timeLeft);
-        const interval = setInterval(() => {
-          timeLeft -= 1;
+          let timeLeft = 180;
           setLockoutTimer(timeLeft);
-          if (timeLeft <= 0) {
-            clearInterval(interval);
-            setLockout(false);
-            setLockoutTimer(0);
-          }
-        }, 1000);
-
+          const interval = setInterval(() => {
+            timeLeft -= 1;
+            setLockoutTimer(timeLeft);
+            if (timeLeft <= 0) {
+              clearInterval(interval);
+              setLockout(false);
+              setLockoutTimer(0);
+            }
+          }, 1000);
+        }
         return;
       }
+
 
       if (!res.data.success) {
         setSnack({
@@ -232,7 +233,11 @@ const LoginEnrollment = ({ setIsAuthenticated }) => {
   };
 
   useEffect(() => {
-    if (showOtpModal) otpInputRef.current?.focus();
+    if (showOtpModal) {
+      setTimeout(() => {
+        otpInputRef.current?.focus();
+      }, 100); // small delay ensures focus after modal is mounted
+    }
   }, [showOtpModal]);
 
 
@@ -412,22 +417,24 @@ const LoginEnrollment = ({ setIsAuthenticated }) => {
                 >
                   <button
                     type="submit"
-                    disabled={lockout || loading} // ✅ disable while loading or locked
+                    disabled={lockout || loading}
                     style={{
                       width: "100%",
-                      backgroundColor: mainButtonColor,
-                      border: `2px solid ${borderColor}`, 
+                      backgroundColor: lockout
+                        ? "gray"
+                        : loading
+                          ? "#ccc"
+                          : mainButtonColor,
+                      border: `2px solid ${borderColor}`,
                       color: "white",
                       height: "50px",
                       borderRadius: "10px",
-                     
                       padding: "0.5rem 0",
                       fontSize: "16px",
                       fontWeight: "bold",
                       marginTop: "50px",
-                      
                       cursor: lockout || loading ? "not-allowed" : "pointer",
-                      opacity: lockout || loading ? 0.8 : 1, // ✅ subtle fade only, not color change
+                      opacity: lockout || loading ? 0.8 : 1,
                       transition: "opacity 0.2s ease-in-out",
                     }}
                   >
@@ -437,6 +444,7 @@ const LoginEnrollment = ({ setIsAuthenticated }) => {
                         ? "Processing..."
                         : "Log In"}
                   </button>
+
                 </div>
 
 

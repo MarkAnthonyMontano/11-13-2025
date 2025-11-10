@@ -289,7 +289,7 @@ app.get("/api/settings", async (req, res) => {
         border_color: "#000000",
         stepper_color: "#000000",
         sidebar_button_color: "#000000",
- 
+
         title_color: "#000000",
         subtitle_color: "#555555",
       });
@@ -325,7 +325,7 @@ app.post(
         border_color,
         stepper_color,
         sidebar_button_color,
-  
+
         title_color,
         subtitle_color,
       } = req.body;
@@ -376,7 +376,7 @@ app.post(
           border_color || "#000000",
           stepper_color || "#000000",
           sidebar_button_color || "#000000",
- 
+
           title_color || "#000000",
           subtitle_color || "#555555",
         ];
@@ -450,7 +450,7 @@ app.post("/register", async (req, res) => {
   const { email, password, campus } = req.body;
 
   if (!email || !password) {
-    return res.json({success: false, message: "Please fill up all required fields" });
+    return res.json({ success: false, message: "Please fill up all required fields" });
   }
 
   let person_id = null;
@@ -471,7 +471,7 @@ app.post("/register", async (req, res) => {
       [email.trim().toLowerCase()]
     );
     if (existingUser.length > 0) {
-      return res.json({success: false, message: "Email is already registered" });
+      return res.json({ success: false, message: "Email is already registered" });
     }
 
     // ✅ 4️⃣ Determine campus value dynamically
@@ -571,13 +571,13 @@ app.post("/register", async (req, res) => {
     if (person_id) {
       await db.query("DELETE FROM person_table WHERE person_id = ?", [person_id]);
     }
-    res.json({success: false, message: "Internal Server Error", error: error.message });
+    res.json({ success: false, message: "Internal Server Error", error: error.message });
   }
 });
 
-
-app.post("/register_registrar", async (req, res) => {
+app.post("/register_registrar", upload.single("profile_picture"), async (req, res) => {
   const { employee_id, last_name, middle_name, first_name, role, email, password, status, dprtmnt_id } = req.body;
+  const file = req.file; // optional
 
   if (!employee_id || !last_name || !first_name || !role || !email || !password || !dprtmnt_id) {
     return res.status(400).json({ message: "All required fields must be filled" });
@@ -593,23 +593,15 @@ app.post("/register_registrar", async (req, res) => {
     const [personInsert] = await db3.query("INSERT INTO person_table () VALUES ()");
     const person_id = personInsert.insertId;
 
-    const sql = `
-      INSERT INTO user_accounts 
-      (person_id, employee_id, last_name, middle_name, first_name, role, email, password, status, dprtmnt_id) 
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `;
-    await db3.query(sql, [
-      person_id,
-      employee_id,
-      last_name,
-      middle_name || null,
-      first_name,
-      role,
-      email.toLowerCase(),
-      hashedPassword,
-      status || 1,
-      dprtmnt_id
-    ]);
+    const profilePicName = file ? `${employee_id}_${Date.now()}${path.extname(file.originalname)}` : null;
+    if (file) fs.writeFileSync(path.join(__dirname, "uploads", profilePicName), file.buffer);
+
+    await db3.query(
+      `INSERT INTO user_accounts 
+       (person_id, employee_id, last_name, middle_name, first_name, role, email, password, status, dprtmnt_id, profile_picture) 
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [person_id, employee_id, last_name, middle_name, first_name, role, email.toLowerCase(), hashedPassword, status || 1, dprtmnt_id, profilePicName]
+    );
 
     res.status(201).json({ message: "Registrar account created successfully!" });
   } catch (error) {
@@ -649,7 +641,8 @@ app.get("/api/registrars", async (req, res) => {
 });
 
 // ✅ Actual upload + database update route
-app.post("/update_registrar/:id", profileUpload.single("profile_picture"), async (req, res) => {
+app.put("/update_registrar/:id", profileUpload.single("profile_picture"), async (req, res) => {
+
   const { id } = req.params;
   const data = req.body;
   const file = req.file;
@@ -690,14 +683,16 @@ app.post("/update_registrar/:id", profileUpload.single("profile_picture"), async
     }
 
     // ✅ Update registrar data in DB
+    // Update registrar
     const updated = {
-      employee_id: data.employee_id ?? current.employee_id,
-      last_name: data.last_name ?? current.last_name,
-      middle_name: data.middle_name ?? current.middle_name,
-      first_name: data.first_name ?? current.first_name,
-      role: data.role ?? current.role,
-      email: data.email ?? current.email,
-      dprtmnt_id: data.dprtmnt_id ?? current.dprtmnt_id,
+      employee_id: data.employee_id || current.employee_id,
+      last_name: data.last_name || current.last_name,
+      middle_name: data.middle_name || current.middle_name,
+      first_name: data.first_name || current.first_name,
+      role: data.role || current.role,
+      email: data.email || current.email,
+      // Fix: only update dprtmnt_id if provided, else keep current
+      dprtmnt_id: data.dprtmnt_id && data.dprtmnt_id !== "" ? data.dprtmnt_id : current.dprtmnt_id,
       profile_picture: finalFilename,
       status:
         data.status === "0" || data.status === 0
@@ -706,6 +701,7 @@ app.post("/update_registrar/:id", profileUpload.single("profile_picture"), async
             ? 1
             : current.status,
     };
+
 
     const sql = `
       UPDATE user_accounts 
@@ -811,7 +807,7 @@ app.post("/register_student", profileUpload.single("profile_picture"), async (re
   try {
     const [existing] = await db3.query("SELECT * FROM user_accounts WHERE email = ?", [email]);
     if (existing.length > 0) {
-      return res.json({success: false, message: "Email already exists" });
+      return res.json({ success: false, message: "Email already exists" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -880,7 +876,7 @@ app.put("/update_student/:id", profileUpload.single("profile_picture"), async (r
       WHERE ua.role = 'student' AND ua.id = ?;
       `
       , [id]);
-    if (existing.length === 0) return res.json({success: false, message: "Student not found" });
+    if (existing.length === 0) return res.json({ success: false, message: "Student not found" });
 
     const current = existing[0];
 
@@ -5319,7 +5315,7 @@ WHERE proctor LIKE ?
 
   // 🔹 Bulk Excel Import Exam Scores
   // 🔹 Bulk Excel Import Exam Scores
- 
+
   app.post("/api/exam/import", upload.single("file"), async (req, res) => {
     try {
       if (!req.file) {
@@ -5330,7 +5326,7 @@ WHERE proctor LIKE ?
       const sheetName = workbook.SheetNames[0];
       const sheet = workbook.Sheets[sheetName];
       const rows = XLSX.utils.sheet_to_json(sheet);
-    
+
 
       const loggedInUserId = req.body.userID; // 🔑 Should come from session or token (frontend/localStorage)
 
@@ -5671,7 +5667,7 @@ WHERE proctor LIKE ?
       INSERT INTO person_table (person_id, student_number, profile_img, campus, academicProgram, classifiedAs, applyingAs, program, program2, program3, yearLevel, last_name, first_name, middle_name, extension, nickname, height, weight, lrnNumber, nolrnNumber, gender, pwdMember, pwdType, pwdId, birthOfDate, age, birthPlace, languageDialectSpoken, citizenship, religion, civilStatus, tribeEthnicGroup, cellphoneNumber, emailAddress, presentStreet, presentBarangay, presentZipCode, presentRegion, presentProvince, presentMunicipality, presentDswdHouseholdNumber, sameAsPresentAddress, permanentStreet, permanentBarangay, permanentZipCode, permanentRegion, permanentProvince, permanentMunicipality, permanentDswdHouseholdNumber, solo_parent, father_deceased, father_family_name, father_given_name, father_middle_name, father_ext, father_nickname, father_education, father_education_level, father_last_school, father_course, father_year_graduated, father_school_address, father_contact, father_occupation, father_employer, father_income, father_email, mother_deceased, mother_family_name, mother_given_name, mother_middle_name, mother_ext, mother_nickname, mother_education, mother_education_level, mother_last_school, mother_course, mother_year_graduated, mother_school_address, mother_contact, mother_occupation, mother_employer, mother_income, mother_email, guardian, guardian_family_name, guardian_given_name, guardian_middle_name, guardian_ext, guardian_nickname, guardian_address, guardian_contact, guardian_email, annual_income, schoolLevel, schoolLastAttended, schoolAddress, courseProgram, honor, generalAverage, yearGraduated, schoolLevel1, schoolLastAttended1, schoolAddress1, courseProgram1, honor1, generalAverage1, yearGraduated1, strand, cough, colds, fever, asthma, faintingSpells, heartDisease, tuberculosis, frequentHeadaches, hernia, chronicCough, headNeckInjury, hiv, highBloodPressure, diabetesMellitus, allergies, cancer, smokingCigarette, alcoholDrinking, hospitalized, hospitalizationDetails, medications, hadCovid, covidDate, vaccine1Brand, vaccine1Date, vaccine2Brand, vaccine2Date, booster1Brand, booster1Date, booster2Brand, booster2Date, chestXray, cbc, urinalysis, otherworkups, symptomsToday, remarks, termsOfAgreement, created_at, current_step)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `, [person_data.person_id, person_data.student_number, person_data.profile_img, person_data.campus, person_data.academicProgram, person_data.classifiedAs, person_data.applyingAs, person_data.program, person_data.program2, person_data.program3, person_data.yearLevel, person_data.last_name, person_data.first_name, person_data.middle_name, person_data.extension, person_data.nickname, person_data.height, person_data.weight, person_data.lrnNumber, person_data.nolrnNumber, person_data.gender, person_data.pwdMember, person_data.pwdType, person_data.pwdId, person_data.birthOfDate, person_data.age, person_data.birthPlace, person_data.languageDialectSpoken, person_data.citizenship, person_data.religion, person_data.civilStatus, person_data.tribeEthnicGroup, person_data.cellphoneNumber, person_data.emailAddress, person_data.presentStreet, person_data.presentBarangay, person_data.presentZipCode, person_data.presentRegion, person_data.presentProvince, person_data.presentMunicipality, person_data.presentDswdHouseholdNumber, person_data.sameAsPresentAddress, person_data.permanentStreet, person_data.permanentBarangay, person_data.permanentZipCode, person_data.permanentRegion, person_data.permanentProvince, person_data.permanentMunicipality, person_data.permanentDswdHouseholdNumber, person_data.solo_parent, person_data.father_deceased, person_data.father_family_name, person_data.father_given_name, person_data.father_middle_name, person_data.father_ext, person_data.father_nickname, person_data.father_education, person_data.father_education_level, person_data.father_last_school, person_data.father_course, person_data.father_year_graduated, person_data.father_school_address, person_data.father_contact, person_data.father_occupation, person_data.father_employer, person_data.father_income, person_data.father_email, person_data.mother_deceased, person_data.mother_family_name, person_data.mother_given_name, person_data.mother_middle_name, person_data.mother_ext, person_data.mother_nickname, person_data.mother_education, person_data.mother_education_level, person_data.mother_last_school, person_data.mother_course, person_data.mother_year_graduated, person_data.mother_school_address, person_data.mother_contact, person_data.mother_occupation, person_data.mother_employer, person_data.mother_income, person_data.mother_email, person_data.guardian, person_data.guardian_family_name, person_data.guardian_given_name,
-        person_data.guardian_middle_name, person_data.guardian_ext, person_data.guardian_nickname, person_data.guardian_address, person_data.guardian_contact, person_data.guardian_email, person_data.annual_income, person_data.schoolLevel, person_data.schoolLastAttended, person_data.schoolAddress, person_data.courseProgram, person_data.honor, person_data.generalAverage, person_data.yearGraduated, person_data.schoolLevel1, person_data.schoolLastAttended1, person_data.schoolAddress1, person_data.courseProgram1, person_data.honor1, person_data.generalAverage1, person_data.yearGraduated1, person_data.strand, person_data.cough, person_data.colds, person_data.fever, person_data.asthma, person_data.faintingSpells, person_data.heartDisease, person_data.tuberculosis, person_data.frequentHeadaches, person_data.hernia, person_data.chronicCough, person_data.headNeckInjury, person_data.hiv, person_data.highBloodPressure, person_data.diabetesMellitus, person_data.allergies, person_data.cancer, person_data.smokingCigarette, person_data.alcoholDrinking, person_data.hospitalized, person_data.hospitalizationDetails, person_data.medications, person_data.hadCovid, person_data.covidDate, person_data.vaccine1Brand, person_data.vaccine1Date, person_data.vaccine2Brand, person_data.vaccine2Date, person_data.booster1Brand, person_data.booster1Date, person_data.booster2Brand, person_data.booster2Date, person_data.chestXray, person_data.cbc, person_data.urinalysis, person_data.otherworkups, person_data.symptomsToday, person_data.remarks, person_data.termsOfAgreement, person_data.created_at, person_data.current_step
+      person_data.guardian_middle_name, person_data.guardian_ext, person_data.guardian_nickname, person_data.guardian_address, person_data.guardian_contact, person_data.guardian_email, person_data.annual_income, person_data.schoolLevel, person_data.schoolLastAttended, person_data.schoolAddress, person_data.courseProgram, person_data.honor, person_data.generalAverage, person_data.yearGraduated, person_data.schoolLevel1, person_data.schoolLastAttended1, person_data.schoolAddress1, person_data.courseProgram1, person_data.honor1, person_data.generalAverage1, person_data.yearGraduated1, person_data.strand, person_data.cough, person_data.colds, person_data.fever, person_data.asthma, person_data.faintingSpells, person_data.heartDisease, person_data.tuberculosis, person_data.frequentHeadaches, person_data.hernia, person_data.chronicCough, person_data.headNeckInjury, person_data.hiv, person_data.highBloodPressure, person_data.diabetesMellitus, person_data.allergies, person_data.cancer, person_data.smokingCigarette, person_data.alcoholDrinking, person_data.hospitalized, person_data.hospitalizationDetails, person_data.medications, person_data.hadCovid, person_data.covidDate, person_data.vaccine1Brand, person_data.vaccine1Date, person_data.vaccine2Brand, person_data.vaccine2Date, person_data.booster1Brand, person_data.booster1Date, person_data.booster2Brand, person_data.booster2Date, person_data.chestXray, person_data.cbc, person_data.urinalysis, person_data.otherworkups, person_data.symptomsToday, person_data.remarks, person_data.termsOfAgreement, person_data.created_at, person_data.current_step
       ])
 
       // ✅ Insert login credentials (or update if existing)
@@ -10697,9 +10693,16 @@ app.get('/api/person_status_by_applicant/:applicant_number', (req, res) => {
 });
 
 // GET all templates
+// GET all templates with department name
 app.get("/api/email-templates", async (req, res) => {
   try {
-    const [rows] = await db.query("SELECT * FROM email_templates ORDER BY updated_at DESC");
+    const [rows] = await db.query(`
+      SELECT et.*, dpr.dprtmnt_name AS department_name
+      FROM email_templates et
+      LEFT JOIN enrollment.dprtmnt_table dpr
+      ON et.department_id = dpr.dprtmnt_id
+      ORDER BY et.updated_at DESC
+    `);
     res.json(rows);
   } catch (err) {
     console.error(err);
@@ -10707,15 +10710,17 @@ app.get("/api/email-templates", async (req, res) => {
   }
 });
 
+
 // CREATE template
 app.post("/api/email-templates", async (req, res) => {
   try {
-    const { sender_name, is_active = 1 } = req.body;
-    if (!sender_name) return res.status(400).json({ error: "Sender name is required" });
+    const { sender_name, department_id, is_active = 1 } = req.body;
+    if (!sender_name || !department_id)
+      return res.status(400).json({ error: "Sender name and department are required" });
 
     const [result] = await db.query(
-      "INSERT INTO email_templates (sender_name, is_active) VALUES (?, ?)",
-      [sender_name, is_active ? 1 : 0]
+      "INSERT INTO email_templates (sender_name, department_id, is_active) VALUES (?, ?, ?)",
+      [sender_name, department_id, is_active ? 1 : 0]
     );
     res.status(201).json({ template_id: result.insertId });
   } catch (err) {
@@ -10724,14 +10729,21 @@ app.post("/api/email-templates", async (req, res) => {
   }
 });
 
+
 // UPDATE template
 app.put("/api/email-templates/:id", async (req, res) => {
   try {
-    const { sender_name, is_active } = req.body;
+    const { sender_name, department_id, is_active } = req.body;
+
     const [result] = await db.query(
-      "UPDATE email_templates SET sender_name = COALESCE(?, sender_name), is_active = COALESCE(?, is_active) WHERE template_id = ?",
-      [sender_name, is_active, req.params.id]
+      `UPDATE email_templates 
+       SET sender_name = COALESCE(?, sender_name),
+           department_id = COALESCE(?, department_id),
+           is_active = COALESCE(?, is_active)
+       WHERE template_id = ?`,
+      [sender_name, department_id, is_active, req.params.id]
     );
+
     if (result.affectedRows === 0) return res.status(404).json({ error: "Not found" });
     res.json({ success: true });
   } catch (err) {
@@ -10739,6 +10751,7 @@ app.put("/api/email-templates/:id", async (req, res) => {
     res.status(500).json({ error: "Failed to update template" });
   }
 });
+
 
 // DELETE template
 app.delete("/api/email-templates/:id", async (req, res) => {
@@ -12612,7 +12625,7 @@ app.get("/api/program_evaluation/:student_number", async (req, res) => {
 
     res.json(studentInfo);
     console.log(studentInfo);
-    
+
   } catch (error) {
     console.log("Database Error", error);
     res.status(500).send({ message: "Database/Server Error", error });

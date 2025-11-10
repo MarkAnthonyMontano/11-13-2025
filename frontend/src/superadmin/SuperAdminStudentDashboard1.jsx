@@ -2737,6 +2737,7 @@ const SuperAdminStudentDashboard1 = () => {
                                             top: 8,
                                             right: 8,
                                             color: "#fff",
+                                            border: `2px solid ${borderColor}`,
                                             backgroundColor: settings?.header_color || "#1976d2",
 
                                             "&:hover": {
@@ -2751,6 +2752,7 @@ const SuperAdminStudentDashboard1 = () => {
                                     <Box
                                         sx={{
                                             backgroundColor: settings?.header_color || "#1976d2",
+                                            border: `2px solid ${borderColor}`,
                                             color: "white",
                                             py: 2,
                                             px: 3,
@@ -2880,7 +2882,7 @@ const SuperAdminStudentDashboard1 = () => {
                                         onClick={handleUpload}
                                         sx={{
                                             backgroundColor: settings?.header_color || "#1976d2",
-
+                                            border: `2px solid ${borderColor}`,
                                             color: "white",
                                             fontWeight: "bold",
                                             "&:hover": {

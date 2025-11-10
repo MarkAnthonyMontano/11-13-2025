@@ -210,7 +210,7 @@ const settings = useContext(SettingsContext);
       }
 
          .student-table {
-    margin-top: 160px !important;
+    margin-top: 170px !important;
   }
 
 

@@ -232,19 +232,7 @@ const FacultyWorkload = () => {
     const divToPrintRef = useRef();
 
     const printDiv = async () => {
-        try {
-            const page_name = "Faculty Workload Report";
-            const fullName = `${profData.lname}, ${profData.fname} ${profData.mname}`;
-            const type = "Printing"
-
-            await axios.post(`http://localhost:5000/insert-logs/for-print/faculty/${profData.prof_id}`, {
-                message: `User #${profData.prof_id} - ${fullName} printed ${page_name}`, type: type,
-            });
-
-            window.print();
-        } catch (err) {
-            console.error("Error inserting audit log");
-        }
+        window.print();
     };
 
 

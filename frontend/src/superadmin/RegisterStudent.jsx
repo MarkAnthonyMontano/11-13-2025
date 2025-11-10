@@ -32,47 +32,47 @@ import { FileUpload } from "@mui/icons-material";
 import EditIcon from "@mui/icons-material/Edit";
 import Unauthorized from "../components/Unauthorized";
 import LoadingOverlay from "../components/LoadingOverlay";
-
+import SearchIcon from "@mui/icons-material/Search";
 
 const RegisterStudents = () => {
     const settings = useContext(SettingsContext);
 
-    const [titleColor, setTitleColor] = useState("#000000");
-    const [subtitleColor, setSubtitleColor] = useState("#555555");
-    const [borderColor, setBorderColor] = useState("#000000");
-    const [mainButtonColor, setMainButtonColor] = useState("#1976d2");
-    const [subButtonColor, setSubButtonColor] = useState("#ffffff");   // ✅ NEW
-    const [stepperColor, setStepperColor] = useState("#000000");       // ✅ NEW
+  const [titleColor, setTitleColor] = useState("#000000");
+  const [subtitleColor, setSubtitleColor] = useState("#555555");
+  const [borderColor, setBorderColor] = useState("#000000");
+  const [mainButtonColor, setMainButtonColor] = useState("#1976d2");
+  const [subButtonColor, setSubButtonColor] = useState("#ffffff");   // ✅ NEW
+  const [stepperColor, setStepperColor] = useState("#000000");       // ✅ NEW
 
-    const [fetchedLogo, setFetchedLogo] = useState(null);
-    const [companyName, setCompanyName] = useState("");
-    const [shortTerm, setShortTerm] = useState("");
-    const [campusAddress, setCampusAddress] = useState("");
+  const [fetchedLogo, setFetchedLogo] = useState(null);
+  const [companyName, setCompanyName] = useState("");
+  const [shortTerm, setShortTerm] = useState("");
+  const [campusAddress, setCampusAddress] = useState("");
 
-    useEffect(() => {
-        if (!settings) return;
+  useEffect(() => {
+    if (!settings) return;
 
-        // 🎨 Colors
-        if (settings.title_color) setTitleColor(settings.title_color);
-        if (settings.subtitle_color) setSubtitleColor(settings.subtitle_color);
-        if (settings.border_color) setBorderColor(settings.border_color);
-        if (settings.main_button_color) setMainButtonColor(settings.main_button_color);
-        if (settings.sub_button_color) setSubButtonColor(settings.sub_button_color);   // ✅ NEW
-        if (settings.stepper_color) setStepperColor(settings.stepper_color);           // ✅ NEW
+    // 🎨 Colors
+    if (settings.title_color) setTitleColor(settings.title_color);
+    if (settings.subtitle_color) setSubtitleColor(settings.subtitle_color);
+    if (settings.border_color) setBorderColor(settings.border_color);
+    if (settings.main_button_color) setMainButtonColor(settings.main_button_color);
+    if (settings.sub_button_color) setSubButtonColor(settings.sub_button_color);   // ✅ NEW
+    if (settings.stepper_color) setStepperColor(settings.stepper_color);           // ✅ NEW
 
-        // 🏫 Logo
-        if (settings.logo_url) {
-            setFetchedLogo(`http://localhost:5000${settings.logo_url}`);
-        } else {
-            setFetchedLogo(EaristLogo);
-        }
+    // 🏫 Logo
+    if (settings.logo_url) {
+      setFetchedLogo(`http://localhost:5000${settings.logo_url}`);
+    } else {
+      setFetchedLogo(EaristLogo);
+    }
 
-        // 🏷️ School Information
-        if (settings.company_name) setCompanyName(settings.company_name);
-        if (settings.short_term) setShortTerm(settings.short_term);
-        if (settings.campus_address) setCampusAddress(settings.campus_address);
+    // 🏷️ School Information
+    if (settings.company_name) setCompanyName(settings.company_name);
+    if (settings.short_term) setShortTerm(settings.short_term);
+    if (settings.campus_address) setCampusAddress(settings.campus_address);
 
-    }, [settings]);
+  }, [settings]); 
 
     // Also put it at the very top
     const [userID, setUserID] = useState("");
@@ -127,6 +127,8 @@ const RegisterStudents = () => {
         }
     };
 
+    
+    const [searchQuery, setSearchQuery] = useState("");
     const [department, setDepartment] = useState([]);
     const [programs, setPrograms] = useState([]);
     const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -154,6 +156,7 @@ const RegisterStudents = () => {
     const [itemsPerPage, setItemsPerPage] = useState(50);
     const [selectedDepartmentFilter, setSelectedDepartmentFilter] = useState("");
     const [sortOrder, setSortOrder] = useState("");
+
 
     useEffect(() => {
         fetchDepartments();
@@ -223,11 +226,11 @@ const RegisterStudents = () => {
                 : "http://localhost:5000/register_student";
 
             const res = editData
-                ? await axios.put(url, fd, {
-                    headers: { "Content-Type": "multipart/form-data" },
+            ? await axios.put(url, fd, {
+                headers: { "Content-Type": "multipart/form-data" },
                 })
-                : await axios.post(url, fd, {
-                    headers: { "Content-Type": "multipart/form-data" },
+            : await axios.post(url, fd, {
+                headers: { "Content-Type": "multipart/form-data" },
                 });
 
             if (!res.data.success) {
@@ -237,6 +240,7 @@ const RegisterStudents = () => {
             }
 
             // ✅ Success flow
+            fetchStudents();
             setOpenSnackbar(true);
             setOpenDialog(false);
             setEditData(null);
@@ -254,7 +258,6 @@ const RegisterStudents = () => {
                 profile_picture: null,
                 preview: "",
             });
-            fetchStudents();
         } catch (err) {
             setErrorMessage(err.response?.data?.message || "Something went wrong");
         }
@@ -323,7 +326,9 @@ const RegisterStudents = () => {
                     "Content-Type": "multipart/form-data",
                 },
             });
-            alert(res.data.message || "File imported successfully!");
+            setOpenSnackbar(true);
+            fetchStudents();
+
         } catch (err) {
             console.error("❌ Import failed:", err);
             alert("Error importing file");
@@ -342,16 +347,22 @@ const RegisterStudents = () => {
     };
 
     const filteredStudent = Students
-        .filter((r) =>
-            selectedDepartmentFilter
-                ? r.dprtmnt_name === selectedDepartmentFilter
-                : true
-        )
+        .filter((r) => {
+        const fullText = `${r.first_name || ""} ${r.middle_name || ""} ${r.last_name || ""} ${r.email || ""}`.toLowerCase();
+        const matchesSearch = fullText.includes(searchQuery);
+        const matchesDepartment =
+            selectedDepartmentFilter === "" || r.dprtmnt_name === selectedDepartmentFilter;
+        return matchesSearch && matchesDepartment;
+        })
         .sort((a, b) => {
-            if (sortOrder === "asc") return a.last_name.localeCompare(b.last_name);
-            if (sortOrder === "desc") return b.last_name.localeCompare(a.last_name);
-            return 0;
+        const nameA = `${a.first_name} ${a.last_name}`.toLowerCase();
+        const nameB = `${b.first_name} ${b.last_name}`.toLowerCase();
+
+        if (sortOrder === "asc") return nameA.localeCompare(nameB);
+        if (sortOrder === "desc") return nameB.localeCompare(nameA);
+        return 0; // no sorting if not selected
         });
+
 
     const totalPages = Math.ceil(filteredStudent.length / itemsPerPage);
     const indexOfLastItem = currentPage * itemsPerPage;
@@ -393,10 +404,32 @@ const RegisterStudents = () => {
         <Box sx={{ height: "calc(100vh - 150px)", overflowY: "auto", pr: 1 }}>
             <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
                 {/* Left: Header */}
-                <Typography variant="h4" fontWeight="bold" style={{ color: titleColor, }}>
+                <Typography variant="h4" fontWeight="bold" style={{color: titleColor,}}>
                     STUDENTS ACCOUNTS
                 </Typography>
 
+                {/* Right: Search */}
+                <TextField
+                  variant="outlined"
+                  placeholder="Search by name or email"
+                  size="small"
+                  value={searchQuery}
+                  onChange={(p) => {
+                    setSearchQuery(p.target.value.toLowerCase());
+                    setCurrentPage(1); // reset to page 1 when searching
+                  }}
+                  sx={{
+                    width: 450,
+                    backgroundColor: "#fff",
+                    borderRadius: 1,
+                    "& .MuiOutlinedInput-root": {
+                      borderRadius: "10px",
+                    },
+                  }}
+                  InputProps={{
+                    startAdornment: <SearchIcon sx={{ mr: 1, color: "gray" }} />,
+                  }}
+                />
             </Box>
 
             <hr style={{ border: "1px solid #ccc", width: "100%" }} />
@@ -404,18 +437,14 @@ const RegisterStudents = () => {
 
             <TableContainer component={Paper} sx={{ width: '100%' }}>
                 <Table size="small">
-                    <TableHead sx={{
-                        backgroundColor: settings?.header_color || "#1976d2",
-                        color: "white"
-                    }}>
+                    <TableHead sx={{ backgroundColor: '#6D2323', color: "white" }}>
                         <TableRow>
                             <TableCell
                                 colSpan={10}
                                 sx={{
-                                    border: `2px solid ${borderColor}`,
+                                    border: `2px solid ${borderColor}`, 
                                     py: 0.5,
-                                    backgroundColor: settings?.header_color || "#1976d2",
-
+                                    backgroundColor: '#6D2323',
                                     color: "white"
                                 }}
                             >
@@ -584,8 +613,7 @@ const RegisterStudents = () => {
                 component={Paper}
                 sx={{
                     width: "100%",
-                   border: `2px solid ${borderColor}`, 
-
+                    border: "2px solid #800000",
                 }}
             >
                 <Table>
@@ -611,7 +639,7 @@ const RegisterStudents = () => {
                                                 last_name: "",
                                                 middle_name: "",
                                                 first_name: "",
-                                                role: "Student",
+                                                role: "student",
                                                 email: "",
                                                 password: "",
                                                 status: "",
@@ -625,7 +653,7 @@ const RegisterStudents = () => {
                                             textTransform: "none",
                                             fontWeight: "bold",
                                             width: "350px",
-                                            "&:hover": { backgroundColor: "#000000" },
+                                            "&:hover": { backgroundColor: "#6D2323" },
                                         }}
                                     >
                                         Add Student
@@ -709,10 +737,9 @@ const RegisterStudents = () => {
                 </Table>
             </TableContainer>
 
-            <TableContainer component={Paper} sx={{ width: "100%", border: `2px solid ${borderColor}`, mb: 4 }}>
+            <TableContainer component={Paper} sx={{ width: "100%", border: `2px solid ${borderColor}`,  mb: 4 }}>
                 <Table>
-                    <TableHead sx={{  backgroundColor: settings?.header_color || "#1976d2",
- }}>
+                    <TableHead sx={{ backgroundColor: "#6D2323" }}>
                         <TableRow>
                             {[
                                 "Student Number",
@@ -732,8 +759,7 @@ const RegisterStudents = () => {
                                         color: "white",
                                         fontWeight: "bold",
                                         textAlign: "center",
-                                       border: `2px solid ${borderColor}`, 
-
+                                        border: "1px solid maroon"
                                     }}
                                 >
                                     {header}
@@ -746,14 +772,14 @@ const RegisterStudents = () => {
                         {filteredStudent.length > 0 ? (
                             filteredStudent.map((r) => (
                                 <TableRow key={r.user_id}>
-                                    <TableCell sx={{ textAlign: "center", border: `2px solid ${borderColor}`,  }}>{r.student_number}</TableCell>
+                                    <TableCell sx={{ textAlign: "center", border: "1px solid maroon" }}>{r.student_number}</TableCell>
 
-                                    <TableCell sx={{ textAlign: "center", border: `2px solid ${borderColor}`, }}>
+                                    <TableCell sx={{ textAlign: "center", border: "1px solid maroon" }}>
                                         {r.profile_picture ? (
                                             <Avatar
                                                 src={`http://localhost:5000/uploads/${r.profile_picture}`}
                                                 alt={r.first_name}
-                                                sx={{ width: 60, height: 60, margin: "auto", border: `2px solid ${borderColor}`, }}
+                                                sx={{ width: 60, height: 60, margin: "auto", border: "1px solid maroon" }}
                                             />
                                         ) : (
                                             <Avatar sx={{ bgcolor: "#6D2323", margin: "auto" }}>
@@ -762,28 +788,28 @@ const RegisterStudents = () => {
                                         )}
                                     </TableCell>
 
-                                    <TableCell sx={{ textAlign: "center", border: `2px solid ${borderColor}`, }}>
+                                    <TableCell sx={{ textAlign: "center", border: "1px solid maroon" }}>
                                         {`${r.first_name || ""} ${r.middle_name || ""} ${r.last_name || ""}`}
                                     </TableCell>
 
-                                    <TableCell sx={{ textAlign: "center", border: `2px solid ${borderColor}`, }}>{r.email}</TableCell>
+                                    <TableCell sx={{ textAlign: "center", border: "1px solid maroon" }}>{r.email}</TableCell>
 
-                                    <TableCell sx={{ textAlign: "center", border: `2px solid ${borderColor}`, }}>
+                                    <TableCell sx={{ textAlign: "center", border: "1px solid maroon" }}>
                                         {r.program_description || "N/A"}
                                     </TableCell>
 
-                                    <TableCell sx={{ textAlign: "center", border: `2px solid ${borderColor}`, }}>
+                                    <TableCell sx={{ textAlign: "center", border: "1px solid maroon" }}>
                                         {r.year_level_description || "None"}
                                     </TableCell>
 
 
 
                                     {/* ✅ EDIT BUTTON */}
-                                    <TableCell sx={{ border: `2px solid ${borderColor}`,}}>
+                                    <TableCell sx={{ border: "1px solid maroon", border: `2px solid ${borderColor}`, }}>
                                         <Button
                                             onClick={() => handleEdit(r)}
                                             sx={{
-                                                backgroundColor: "green",
+                                                backgroundColor: "#eccb22ff",
                                                 color: "white",
                                                 textTransform: "none",
                                                 fontWeight: "bold",
@@ -796,7 +822,7 @@ const RegisterStudents = () => {
                                     </TableCell>
 
                                     {/* ✅ STATUS TOGGLE BUTTON */}
-                                    <TableCell sx={{ border: `2px solid ${borderColor}`, }}>
+                                    <TableCell sx={{ border: "1px solid maroon" }}>
                                         <Button
                                             onClick={() => handleToggleStatus(r.user_id, r.status)}
                                             sx={{
@@ -852,7 +878,7 @@ const RegisterStudents = () => {
                                 sx={{
                                     width: 80,
                                     height: 80,
-                                    border: `2px solid ${borderColor}`,
+                                    border: `2px solid ${borderColor}`, 
                                     boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
                                 }}
                             />
@@ -998,8 +1024,8 @@ const RegisterStudents = () => {
                         variant="contained"
                         onClick={handleSubmit}
                         sx={{
-                           backgroundColor: mainButtonColor, 
-                            "&:hover": { backgroundColor: "#000000" },
+                            backgroundColor: "#800000",
+                            "&:hover": { backgroundColor: "#6D2323" },
                             fontWeight: "bold",
                         }}
                     >
