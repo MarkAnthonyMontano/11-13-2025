@@ -68,7 +68,7 @@ const SemesterPanel = () => {
   const [hasAccess, setHasAccess] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const pageId = 61;
+  const pageId = 58;
 
   const [semesterDescription, setSemesterDescription] = useState("");
   const [semesters, setSemesters] = useState([]);

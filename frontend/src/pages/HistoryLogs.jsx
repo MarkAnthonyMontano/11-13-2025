@@ -25,7 +25,7 @@ const HistoryLogs = () => {
   // ✅ Access list map
   const [userAccessList, setUserAccessList] = useState({});
 
-  const pageId = 98; // HISTORY LOGS
+  const pageId = 97; // HISTORY LOGS
 
   // Apply settings
   useEffect(() => {
@@ -95,7 +95,7 @@ const HistoryLogs = () => {
     {
       label: "HISTORY LOGS",
       items: [
-        { title: "NOTIFICATIONS", link: "/notifications", icon: NotificationsIcon, page_id: 71 },
+        { title: "NOTIFICATIONS", link: "/notifications", icon: NotificationsIcon, page_id: 68 },
       ],
     },
   ];

@@ -4,8 +4,6 @@ import axios from "axios";
 import { FcPrint } from "react-icons/fc";
 import { useLocation } from "react-router-dom";
 import { SettingsContext } from "../App";
-import Unauthorized from "../components/Unauthorized";
-import LoadingOverlay from "../components/LoadingOverlay";
 import SearchIcon from "@mui/icons-material/Search";
 
 
@@ -46,65 +44,6 @@ const HealthRecord = () => {
         if (settings.short_term) setShortTerm(settings.short_term);
         if (settings.campus_address) setCampusAddress(settings.campus_address);
 
-    }, [settings]);
-
-    const [hasAccess, setHasAccess] = useState(null);
-    const [loading, setLoading] = useState(false);
-
-    const pageId = 25;
-
-    const [employeeID, setEmployeeID] = useState("");
-
-    useEffect(() => {
-
-        const storedUser = localStorage.getItem("email");
-        const storedRole = localStorage.getItem("role");
-        const storedID = localStorage.getItem("person_id");
-        const storedEmployeeID = localStorage.getItem("employee_id");
-
-        if (storedUser && storedRole && storedID) {
-            setUser(storedUser);
-            setUserRole(storedRole);
-            setUserID(storedID);
-            setEmployeeID(storedEmployeeID);
-
-            if (storedRole === "registrar") {
-                checkAccess(storedEmployeeID);
-            } else {
-                window.location.href = "/login";
-            }
-        } else {
-            window.location.href = "/login";
-        }
-    }, []);
-
-    const checkAccess = async (employeeID) => {
-        try {
-            const response = await axios.get(`http://localhost:5000/api/page_access/${employeeID}/${pageId}`);
-            if (response.data && response.data.page_privilege === 1) {
-                setHasAccess(true);
-            } else {
-                setHasAccess(false);
-            }
-        } catch (error) {
-            console.error('Error checking access:', error);
-            setHasAccess(false);
-            if (error.response && error.response.data.message) {
-                console.log(error.response.data.message);
-            } else {
-                console.log("An unexpected error occurred.");
-            }
-            setLoading(false);
-        }
-    };
-
-    useEffect(() => {
-        // ✅ Dynamically set logo from settings
-        if (settings?.logo_url) {
-            setFetchedLogo(`http://localhost:5000${settings.logo_url}`);
-        } else {
-            import("../assets/EaristLogo.png").then((img) => setFetchedLogo(img.default));
-        }
     }, [settings]);
 
     const [userID, setUserID] = useState("");
@@ -345,16 +284,6 @@ const HealthRecord = () => {
         return () => clearTimeout(delayDebounce);
     }, [searchQuery]);
 
-    // Put this at the very bottom before the return 
-    if (loading || hasAccess === null) {
-        return <LoadingOverlay open={loading} message="Check Access" />;
-    }
-
-    if (!hasAccess) {
-        return (
-            <Unauthorized />
-        );
-    }
 
 
     return (

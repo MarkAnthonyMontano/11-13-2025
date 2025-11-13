@@ -149,7 +149,7 @@ const ExaminationProfile = ({ personId }) => {
     const [loading, setLoading] = useState(false);
 
 
-    const pageId = 51;
+    const pageId = 48;
 
     const [employeeID, setEmployeeID] = useState("");
 

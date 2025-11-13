@@ -102,7 +102,7 @@ const ProctorApplicantList = () => {
   const [loading, setLoading] = useState(false);
 
 
-  const pageId = 37;
+  const pageId = 33;
 
   const [employeeID, setEmployeeID] = useState("");
 

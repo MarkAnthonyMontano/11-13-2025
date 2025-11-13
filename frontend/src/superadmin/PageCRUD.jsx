@@ -92,7 +92,7 @@ const PageCRUD = () => {
     const [loading, setLoading] = useState(false);
 
 
-    const pageId = 72;
+    const pageId = 69;
 
     const [employeeID, setEmployeeID] = useState("");
 

@@ -71,7 +71,7 @@ const Notifications = () => {
     const [loading, setLoading] = useState(false);
 
 
-    const pageId = 71;
+    const pageId = 68;
 
     const [employeeID, setEmployeeID] = useState("");
 

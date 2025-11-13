@@ -44,7 +44,7 @@ const SystemDashboardPanel = () => {
   // ✅ NEW access map
   const [userAccessList, setUserAccessList] = useState({});
 
-  const pageId = 96; // SYSTEM MANAGEMENT
+  const pageId = 95; // SYSTEM MANAGEMENT
 
   // Load theme
   useEffect(() => {
@@ -119,23 +119,23 @@ const SystemDashboardPanel = () => {
     {
       label: "ROOM & REQUIREMENTS MANAGEMENT",
       items: [
-        { title: "ROOM FORM", link: "/super_admin_room_registration", icon: MeetingRoom, page_id: 100 },
-        { title: "REQUIREMENTS PANEL", link: "/requirements_form", icon: Assignment, page_id: 54 },
+        { title: "ROOM FORM", link: "/super_admin_room_registration", icon: MeetingRoom, page_id: 85 },
+        { title: "REQUIREMENTS PANEL", link: "/requirements_form", icon: Assignment, page_id: 51 },
       ],
     },
     {
       label: "SETTINGS & COMMUNICATION",
       items: [
-        { title: "SETTINGS", link: "/settings", icon: Settings, page_id: 77 },
-        { title: "EMAIL SENDER", link: "/email_template_manager", icon: Email, page_id: 70 },
-        { title: "ANNOUNCEMENT", link: "/announcement", icon: Campaign, page_id: 69 },
+        { title: "SETTINGS", link: "/settings", icon: Settings, page_id: 74 },
+        { title: "EMAIL SENDER", link: "/email_template_manager", icon: Email, page_id: 67 },
+        { title: "ANNOUNCEMENT", link: "/announcement", icon: Campaign, page_id: 66 },
       ],
     },
     {
       label: "SECTION & SEMESTER MANAGEMENT",
       items: [
-        { title: "SECTION PANEL FORM", link: "/section_panel", icon: Class, page_id: 60 },
-        { title: "SEMESTER PANEL FORM", link: "/semester_panel", icon: Timeline, page_id: 61 },
+        { title: "SECTION PANEL FORM", link: "/section_panel", icon: Class, page_id: 57 },
+        { title: "SEMESTER PANEL FORM", link: "/semester_panel", icon: Timeline, page_id: 58 },
         { title: "CHANGE GRADING PERIOD", link: "/change_grade_period", icon: ChangeCircle, page_id: 14 },
         { title: "EVALUATION MANAGEMENT", link: "/evaluation_crud", icon: HelpOutlineIcon, page_id: 23 },
       ],
@@ -143,11 +143,11 @@ const SystemDashboardPanel = () => {
     {
       label: "YEAR & SCHOOL MANAGEMENT",
       items: [
-        { title: "YEAR UPDATE PANEL", link: "/year_update_panel", icon: Update, page_id: 68 },
-        { title: "YEAR LEVEL PANEL FORM", link: "/year_level_panel", icon: Layers, page_id: 66 },
-        { title: "YEAR PANEL FORM", link: "/year_panel", icon: CalendarToday, page_id: 67 },
-        { title: "SCHOOL YEAR ACTIVATOR PANEL", link: "/school_year_activator_panel", icon: EventAvailable, page_id: 57 },
-        { title: "SCHOOL YEAR PANEL", link: "/school_year_panel", icon: DateRange, page_id: 58 },
+        { title: "YEAR UPDATE PANEL", link: "/year_update_panel", icon: Update, page_id: 65 },
+        { title: "YEAR LEVEL PANEL FORM", link: "/year_level_panel", icon: Layers, page_id: 63 },
+        { title: "YEAR PANEL FORM", link: "/year_panel", icon: CalendarToday, page_id: 64 },
+        { title: "SCHOOL YEAR ACTIVATOR PANEL", link: "/school_year_activator_panel", icon: EventAvailable, page_id: 54 },
+        { title: "SCHOOL YEAR PANEL", link: "/school_year_panel", icon: DateRange, page_id: 55 },
       ],
     },
 

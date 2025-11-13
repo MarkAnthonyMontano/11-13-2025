@@ -128,7 +128,7 @@ const SuperAdminStudentDashboard1 = () => {
     const [loading, setLoading] = useState(false);
 
 
-    const pageId = 87;
+    const pageId = 86;
 
     const [employeeID, setEmployeeID] = useState("");
 

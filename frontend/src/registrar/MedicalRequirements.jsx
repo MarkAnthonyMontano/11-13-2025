@@ -262,7 +262,7 @@ const MedicalRequirements = () => {
     const [loading, setLoading] = useState(false);
 
 
-    const pageId = 34;
+    const pageId = 30;
 
     const [employeeID, setEmployeeID] = useState("");
 

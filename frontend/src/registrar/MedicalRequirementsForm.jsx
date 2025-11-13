@@ -89,7 +89,7 @@ const MedicalRequirements = () => {
   const [loading, setLoading] = useState(false);
 
 
-  const pageId = 35;
+  const pageId = 31;
 
   const [employeeID, setEmployeeID] = useState("");
 
@@ -550,7 +550,7 @@ const MedicalRequirements = () => {
               color: activeStep === index ? "#fff" : "#000",
               transition: "0.3s ease",
               "&:hover": {
-                backgroundColor: activeStep === index ? "#5a1c1c" : "#f5d98f",
+               backgroundColor: activeStep === index ? "#000" : "#f5d98f",
               },
             }}
           >

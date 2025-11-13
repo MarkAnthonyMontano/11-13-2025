@@ -99,7 +99,7 @@ const RegistrarResetPassword = () => {
     severity: "success",
   });
 
-  const pageId = 76;
+  const pageId = 73;
 
   const [employeeID, setEmployeeID] = useState("");
 

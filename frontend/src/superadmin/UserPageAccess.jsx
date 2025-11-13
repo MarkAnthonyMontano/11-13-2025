@@ -20,7 +20,8 @@ import {
 } from "@mui/material";
 import { Search } from "@mui/icons-material";
 import SearchIcon from "@mui/icons-material/Search";
-
+import Unauthorized from "../components/Unauthorized";
+import LoadingOverlay from "../components/LoadingOverlay";
 
 const UserPageAccess = () => {
 
@@ -73,6 +74,57 @@ const UserPageAccess = () => {
   const [loading, setLoading] = useState(false);
   const [userID, setUserID] = useState("");
   const [snackbar, setSnackbar] = useState({ open: false, message: "", type: "success" });
+
+  const [user, setUser] = useState("");
+  const [userRole, setUserRole] = useState("");
+  const [hasAccess, setHasAccess] = useState(null);
+  const pageId = 91;
+
+  const [employeeID, setEmployeeID] = useState("");
+
+  useEffect(() => {
+
+    const storedUser = localStorage.getItem("email");
+    const storedRole = localStorage.getItem("role");
+    const storedID = localStorage.getItem("person_id");
+    const storedEmployeeID = localStorage.getItem("employee_id");
+
+    if (storedUser && storedRole && storedID) {
+      setUser(storedUser);
+      setUserRole(storedRole);
+      setUserID(storedID);
+      setEmployeeID(storedEmployeeID);
+
+      if (storedRole === "registrar") {
+        checkAccess(storedEmployeeID);
+      } else {
+        window.location.href = "/login";
+      }
+    } else {
+      window.location.href = "/login";
+    }
+  }, []);
+
+  const checkAccess = async (employeeID) => {
+    try {
+      const response = await axios.get(`http://localhost:5000/api/page_access/${employeeID}/${pageId}`);
+      if (response.data && response.data.page_privilege === 1) {
+        setHasAccess(true);
+      } else {
+        setHasAccess(false);
+      }
+    } catch (error) {
+      console.error('Error checking access:', error);
+      setHasAccess(false);
+      if (error.response && error.response.data.message) {
+        console.log(error.response.data.message);
+      } else {
+        console.log("An unexpected error occurred.");
+      }
+      setLoading(false);
+    }
+  };
+
 
   const mainColor = "#7E0000";
 
@@ -165,6 +217,15 @@ const UserPageAccess = () => {
     }
   };
 
+  // ✅ Access Guards
+  if (loading || hasAccess === null) {
+    return <LoadingOverlay open={loading} message="Checking Access..." />;
+  }
+
+  if (!hasAccess) {
+    return <Unauthorized />;
+  }
+
   return (
     <Box
       sx={{
@@ -239,7 +300,7 @@ const UserPageAccess = () => {
         >
           <TableContainer>
             <Table>
-              <TableHead sx={{  backgroundColor: settings?.header_color || "#1976d2",}}>
+              <TableHead sx={{ backgroundColor: settings?.header_color || "#1976d2", }}>
                 <TableRow>
                   <TableCell sx={{ color: "white", fontWeight: "bold", border: `2px solid ${borderColor}`, }}>#</TableCell>
                   <TableCell sx={{ color: "white", fontWeight: "bold", border: `2px solid ${borderColor}`, }}>Page Description</TableCell>
@@ -256,10 +317,10 @@ const UserPageAccess = () => {
                     const hasAccess = !!pageAccess[page.id];
                     return (
                       <TableRow key={page.id} hover>
-                        <TableCell style={{border: `2px solid ${borderColor}`,}}>{index + 1}</TableCell>
-                        <TableCell style={{border: `2px solid ${borderColor}`,}}>{page.page_description}</TableCell>
-                        <TableCell style={{border: `2px solid ${borderColor}`,}}>{page.page_group}</TableCell>
-                        <TableCell style={{border: `2px solid ${borderColor}`,}} align="center">
+                        <TableCell style={{ border: `2px solid ${borderColor}`, }}>{index + 1}</TableCell>
+                        <TableCell style={{ border: `2px solid ${borderColor}`, }}>{page.page_description}</TableCell>
+                        <TableCell style={{ border: `2px solid ${borderColor}`, }}>{page.page_group}</TableCell>
+                        <TableCell style={{ border: `2px solid ${borderColor}`, }} align="center">
                           <Switch
                             checked={hasAccess}
                             onChange={() => handleToggleChange(page.id, hasAccess)}

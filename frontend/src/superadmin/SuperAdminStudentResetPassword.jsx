@@ -58,7 +58,7 @@ const SuperAdminStudentResetPassword = () => {
   const [userRole, setUserRole] = useState("");
   const [hasAccess, setHasAccess] = useState(null);
 
-  const pageId = 92;
+  const pageId = 91;
 
   const [employeeID, setEmployeeID] = useState("");
 

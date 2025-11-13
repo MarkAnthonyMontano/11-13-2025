@@ -84,7 +84,7 @@ const RegisterStudents = () => {
     const [loading, setLoading] = useState(false);
 
 
-    const pageId = 75;
+    const pageId = 72;
 
     const [employeeID, setEmployeeID] = useState("");
 

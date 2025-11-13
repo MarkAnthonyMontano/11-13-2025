@@ -85,7 +85,7 @@ const RegisterRegistrar = () => {
     const [loading, setLoading] = useState(false);
 
 
-    const pageId = 74;
+    const pageId = 71;
 
     const [employeeID, setEmployeeID] = useState("");
 

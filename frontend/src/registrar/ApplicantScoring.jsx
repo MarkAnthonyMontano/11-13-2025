@@ -117,7 +117,7 @@ const ApplicantScoring = () => {
     const [hasAccess, setHasAccess] = useState(null);
     const [loading, setLoading] = useState(false);
 
-    const pageId = 93;
+    const pageId = 8;
 
     const [employeeID, setEmployeeID] = useState("");
 

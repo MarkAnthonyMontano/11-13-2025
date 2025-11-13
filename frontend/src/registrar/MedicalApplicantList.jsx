@@ -144,7 +144,7 @@ const MedicalApplicantList = () => {
 
     const [hasAccess, setHasAccess] = useState(null);
     const [loading, setLoading] = useState(false);
-    const pageId = 27;
+    const pageId = 24;
 
     const [employeeID, setEmployeeID] = useState("");
 

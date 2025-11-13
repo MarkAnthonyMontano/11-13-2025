@@ -18,7 +18,7 @@ const YearLevelPanel = () => {
   const [hasAccess, setHasAccess] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const pageId = 66;
+  const pageId = 63;
 
   const [yearLevelDescription, setYearLevelDescription] = useState("");
   const [yearLevelList, setYearLevelList] = useState([]);

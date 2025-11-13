@@ -32,7 +32,7 @@ const CourseManagement = () => {
 
   const [userAccessList, setUserAccessList] = useState({});
 
-  const pageId = 94;
+  const pageId = 93;
 
   useEffect(() => {
     if (!settings) return;
@@ -104,8 +104,8 @@ const CourseManagement = () => {
     {
       label: "COURSE MANAGEMENT",
       items: [
-        { title: "PROGRAM TAGGING PANEL", path: "/program_tagging", icon: CollectionsBookmark, page_id: 39 },
-        { title: "PROGRAM PANEL FORM", path: "/program_panel", icon: LibraryBooks, page_id: 38 },
+        { title: "PROGRAM TAGGING PANEL", path: "/program_tagging", icon: CollectionsBookmark, page_id: 35 },
+        { title: "PROGRAM PANEL FORM", path: "/program_panel", icon: LibraryBooks, page_id: 34 },
         { title: "CREATE CURRICULUM", path: "/curriculum_panel", icon: EditNote, page_id: 18 },
         { title: "COURSE PANEL FORM", path: "/course_panel", icon: MenuBook, page_id: 16 },
       ],

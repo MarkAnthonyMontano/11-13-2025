@@ -76,7 +76,7 @@ export default function EmailTemplateManager() {
   const [loading, setLoading] = useState(false);
 
 
-  const pageId = 70;
+  const pageId = 67;
 
   const [employeeID, setEmployeeID] = useState("");
 

@@ -18,7 +18,7 @@ const SchoolYearActivatorPanel = () => {
     const [hasAccess, setHasAccess] = useState(null);
     const [loading, setLoading] = useState(false);
 
-    const pageId = 57;
+    const pageId = 54;
 
     const [schoolYears, setSchoolYears] = useState([]);
 

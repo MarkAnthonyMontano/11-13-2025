@@ -109,7 +109,7 @@ const ReadmissionDashboard2 = () => {
     const [loading, setLoading] = useState(false);
 
 
-    const pageId = 42;
+    const pageId = 39;
 
     const [employeeID, setEmployeeID] = useState("");
 
@@ -579,7 +579,7 @@ const ReadmissionDashboard2 = () => {
                                         : "0px 2px 6px rgba(0,0,0,0.15)",
                                 transition: "0.3s ease",
                                 "&:hover": {
-                                    backgroundColor: currentStep === index ? "#5a1c1c" : "#f5d98f",
+                                    backgroundColor: currentStep === index ? "#000" : "#f5d98f",
                                 },
                             }}
                         >

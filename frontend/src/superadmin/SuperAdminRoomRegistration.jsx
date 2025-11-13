@@ -66,7 +66,7 @@ const SuperAdminRoomRegistration = () => {
   const [hasAccess, setHasAccess] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const pageId = 100;
+  const pageId = 85;
 
   const [employeeID, setEmployeeID] = useState("");
 

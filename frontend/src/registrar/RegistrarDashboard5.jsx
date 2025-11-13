@@ -72,12 +72,13 @@ const RegistrarDashboard5 = () => {
         { label: "Admission Process For College", to: "/applicant_list", icon: <SchoolIcon fontSize="large" /> },
         { label: "Applicant Form", to: "/registrar_dashboard1", icon: <AssignmentIcon fontSize="large" /> },
         { label: "Student Requirements", to: "/registrar_requirements", icon: <AssignmentTurnedInIcon fontSize="large" /> },
-        { label: "Interview Room Assignment", to: "/assign_interview_exam", icon: <MeetingRoomIcon fontSize="large" /> },
-        { label: "Interview Schedule Management", to: "/assign_schedule_applicants_interview", icon: <ScheduleIcon fontSize="large" /> },
-        { label: "Interviewer Applicant's List", to: "/interviewer_applicant_list", icon: <PeopleIcon fontSize="large" /> },
-        { label: "Qualifying / Interview Exam Score", to: "/qualifying_exam_scores", icon: <PersonSearchIcon fontSize="large" /> },
+        { label: "Qualifying / Interview Room Assignment", to: "/assign_qualifying_interview_exam", icon: <MeetingRoomIcon fontSize="large" /> },
+        { label: "Qualifying / Interview Schedule Management", to: "/assign_schedule_applicants_qualifying_interview", icon: <ScheduleIcon fontSize="large" /> },
+        { label: "Qualifying / Interviewer Applicant's List", to: "/qualifying_interviewer_applicant_list", icon: <PeopleIcon fontSize="large" /> },
+        { label: "Qualifying / Interview Exam Score", to: "/qualifying_interview_exam_scores", icon: <PersonSearchIcon fontSize="large" /> },
         { label: "Student Numbering", to: "/student_numbering_per_college", icon: <DashboardIcon fontSize="large" /> },
     ];
+
     const [currentStep, setCurrentStep] = useState(1);
     const [visitedSteps, setVisitedSteps] = useState(Array(stepsData.length).fill(false));
 
@@ -120,7 +121,7 @@ const RegistrarDashboard5 = () => {
     const [loading, setLoading] = useState(false);
 
 
-    const pageId = 50;
+    const pageId = 47;
 
     const [employeeID, setEmployeeID] = useState("");
 
@@ -577,7 +578,7 @@ const RegistrarDashboard5 = () => {
                                         : "0px 2px 6px rgba(0,0,0,0.15)",
                                 transition: "0.3s ease",
                                 "&:hover": {
-                                    backgroundColor: currentStep === index ? "#5a1c1c" : "#f5d98f",
+                                    backgroundColor: currentStep === index ? "#000" : "#f5d98f",
                                 },
                             }}
                         >

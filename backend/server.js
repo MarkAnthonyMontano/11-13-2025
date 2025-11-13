@@ -2867,8 +2867,10 @@ app.post("/api/notify-submission", async (req, res) => {
       type: "submit",
       message,
       applicant_number,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
+      by: null // prevents "Unknown - System" from being shown
     });
+
 
     res.json({ message: "Submission notification sent." });
   } catch (err) {
@@ -2876,6 +2878,9 @@ app.post("/api/notify-submission", async (req, res) => {
     res.status(500).json({ message: "Failed to notify", error: err.message });
   }
 });
+
+
+
 // ✅ GET person details by person_id
 app.get("/api/person/:id", async (req, res) => {
   const { id } = req.params;
@@ -6243,7 +6248,7 @@ io.on("connection", (socket) => {
     }
   });
 
-  
+
 
   // Unassign ALL
   socket.on("unassign_all_from_interview", async ({ schedule_id }) => {
@@ -7953,7 +7958,7 @@ app.post("/api/register_prof", upload.single("profileImage"), async (req, res) =
     const sql2 = `INSERT INTO dprtmnt_profs_table (dprtmnt_id, prof_id) VALUES (?, ?)`;
     await db3.query(sql2, [dprtmnt_id, prof_id]);
 
-    res.status(201).json({success: true, message: "Professor added successfully" });
+    res.status(201).json({ success: true, message: "Professor added successfully" });
   } catch (err) {
     console.error("Insert error:", err);
     res.json({ success: false, error: "Failed to add professor" });
@@ -8032,7 +8037,7 @@ app.put("/api/update_prof/:id", upload.single("profileImage"), async (req, res) 
 
     res.json({ success: true, message: "Professor updated successfully." });
   } catch (err) {
-    res.json({success: false, error: "Internal server error." });
+    res.json({ success: false, error: "Internal server error." });
   }
 });
 
@@ -10683,7 +10688,7 @@ app.delete("/api/delete/schedule/:scheduleId", async (req, res) => {
 });
 
 //SCHEDULE CHECKER
-app.post("/api/check-subject", async (req, res)  => {
+app.post("/api/check-subject", async (req, res) => {
   const { section_id, school_year_id, subject_id, day_of_week } = req.body;
 
   if (!section_id || !school_year_id || !subject_id || !day_of_week) {

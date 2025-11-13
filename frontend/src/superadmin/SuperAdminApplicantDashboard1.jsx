@@ -130,7 +130,7 @@ const SuperAdminApplicantDashboard1 = () => {
     const [loading, setLoading] = useState(false);
 
 
-    const pageId = 78;
+    const pageId = 75;
 
     const [employeeID, setEmployeeID] = useState("");
 

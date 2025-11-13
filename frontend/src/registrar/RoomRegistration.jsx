@@ -77,7 +77,7 @@ const RoomRegistration = () => {
   const [hasAccess, setHasAccess] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const pageId = 55;
+  const pageId = 52;
 
   const [employeeID, setEmployeeID] = useState("");
 
@@ -141,7 +141,7 @@ const RoomRegistration = () => {
 
 
   const navigate = useNavigate();
-  const [activeStep, setActiveStep] = useState(4);
+  const [activeStep, setActiveStep] = useState(3);
   const [clickedSteps, setClickedSteps] = useState(Array(tabs.length).fill(false));
 
 
@@ -377,7 +377,7 @@ const RoomRegistration = () => {
                   : "0px 2px 6px rgba(0,0,0,0.15)",
               transition: "0.3s ease",
               "&:hover": {
-                backgroundColor: activeStep === index ? "#5a1c1c" : "#f5d98f",
+                backgroundColor: activeStep === index ? "#000" : "#f5d98f",
               },
             }}
           >

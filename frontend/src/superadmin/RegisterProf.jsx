@@ -80,7 +80,7 @@ const RegisterProf = () => {
   const [loading, setLoading] = useState(false);
 
 
-  const pageId = 73;
+  const pageId = 70;
 
   const [employeeID, setEmployeeID] = useState("");
 

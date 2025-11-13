@@ -36,7 +36,7 @@ const AccountDashboard = () => {
   // ✅ Access List Map
   const [userAccessList, setUserAccessList] = useState({});
 
-  const pageId = 97; // ACCOUNT MANAGEMENT
+  const pageId = 96; // ACCOUNT MANAGEMENT
 
   // Apply settings
   useEffect(() => {
@@ -107,25 +107,25 @@ const AccountDashboard = () => {
     {
       label: "RESET PASSWORD ",
       items: [
-        { title: "RESET PASSWORD", path: "/registrar_reset_password", icon: LockReset, page_id: 76 },
+        { title: "RESET PASSWORD", path: "/registrar_reset_password", icon: LockReset, page_id: 73 },
 
       ],
     },
     {
       label: "ACCOUNT CREATION",
       items: [
-        { title: "ADD FACULTY ACCOUNTS", path: "/register_prof", icon: PersonAdd, page_id: 73 },
-        { title: "ADD REGISTRAR ACCOUNT", path: "/register_registrar", icon: PersonAdd, page_id: 74 },
-        { title: "ADD STUDENT ACCOUNT", path: "/register_student", icon: PersonAdd, page_id: 75 },
+        { title: "ADD FACULTY ACCOUNTS", path: "/register_prof", icon: PersonAdd, page_id: 70 },
+        { title: "ADD REGISTRAR ACCOUNT", path: "/register_registrar", icon: PersonAdd, page_id: 71 },
+        { title: "ADD STUDENT ACCOUNT", path: "/register_student", icon: PersonAdd, page_id: 72 },
       ],
     },
 
     {
       label: "ACCOUNT INFORMATION",
       items: [
-        { title: "APPLICANT INFORMATION", path: "/super_admin_applicant_dashboard1", icon: Info, page_id: 78 },
-        { title: "UPLOAD REQUIREMENTS", path: "/super_admin_requirements_uploader", icon: Info, page_id: 99 },
-        { title: "STUDENT INFORMATION", path: "/super_admin_student_dashboard1", icon: Info, page_id: 87 },
+        { title: "APPLICANT INFORMATION", path: "/super_admin_applicant_dashboard1", icon: Info, page_id: 75 },
+        { title: "UPLOAD REQUIREMENTS", path: "/super_admin_requirements_uploader", icon: Info, page_id: 84 },
+        { title: "STUDENT INFORMATION", path: "/super_admin_student_dashboard1", icon: Info, page_id: 86 },
 
       ],
     },
@@ -142,10 +142,10 @@ const AccountDashboard = () => {
       label: "RESET PASSWORD MANAGEMENT",
       items: [
 
-        { title: "APPLICANT RESET PASSWORD", path: "/superadmin_applicant_reset_password", icon: People, page_id: 84 },
-        { title: "STUDENT RESET PASSWORD", path: "/superadmin_student_reset_password", icon: School, page_id: 92 },
-        { title: "FACULTY RESET PASSWORD", path: "/superadmin_faculty_reset_password", icon: SupervisorAccount, page_id: 85 },
-        { title: "REGISTRAR RESET PASSWORD", path: "/superadmin_registrar_reset_password", icon: AdminPanelSettings, page_id: 86 },
+        { title: "APPLICANT RESET PASSWORD", path: "/superadmin_applicant_reset_password", icon: People, page_id: 81 },
+        { title: "STUDENT RESET PASSWORD", path: "/superadmin_student_reset_password", icon: School, page_id: 91 },
+        { title: "FACULTY RESET PASSWORD", path: "/superadmin_faculty_reset_password", icon: SupervisorAccount, page_id: 82 },
+        { title: "REGISTRAR RESET PASSWORD", path: "/superadmin_registrar_reset_password", icon: AdminPanelSettings, page_id: 83 },
       ],
     },
   ];

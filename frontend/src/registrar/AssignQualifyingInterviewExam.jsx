@@ -56,17 +56,18 @@ const AssignInterviewExam = () => {
 
     }, [settings]);
 
-
-    const tabs = [
+   const tabs = [
         { label: "Admission Process For College", to: "/applicant_list", icon: <SchoolIcon fontSize="large" /> },
         { label: "Applicant Form", to: "/registrar_dashboard1", icon: <AssignmentIcon fontSize="large" /> },
         { label: "Student Requirements", to: "/registrar_requirements", icon: <AssignmentTurnedInIcon fontSize="large" /> },
-        { label: "Interview Room Assignment", to: "/assign_interview_exam", icon: <MeetingRoomIcon fontSize="large" /> },
-        { label: "Interview Schedule Management", to: "/assign_schedule_applicants_interview", icon: <ScheduleIcon fontSize="large" /> },
-        { label: "Interviewer Applicant's List", to: "/interviewer_applicant_list", icon: <PeopleIcon fontSize="large" /> },
-        { label: "Qualifying / Interview Exam Score", to: "/qualifying_exam_scores", icon: <PersonSearchIcon fontSize="large" /> },
+        { label: "Qualifying / Interview Room Assignment", to: "/assign_qualifying_interview_exam", icon: <MeetingRoomIcon fontSize="large" /> },
+        { label: "Qualifying / Interview Schedule Management", to: "/assign_schedule_applicants_qualifying_interview", icon: <ScheduleIcon fontSize="large" /> },
+        { label: "Qualifying / Interviewer Applicant's List", to: "/qualifying_interviewer_applicant_list", icon: <PeopleIcon fontSize="large" /> },
+        { label: "Qualifying / Interview Exam Score", to: "/qualifying_interview_exam_scores", icon: <PersonSearchIcon fontSize="large" /> },
         { label: "Student Numbering", to: "/student_numbering_per_college", icon: <DashboardIcon fontSize="large" /> },
     ];
+
+    
     const navigate = useNavigate();
     const [activeStep, setActiveStep] = useState(3);
     const [clickedSteps, setClickedSteps] = useState(Array(tabs.length).fill(false));
@@ -276,7 +277,7 @@ const AssignInterviewExam = () => {
                         fontSize: '36px',
                     }}
                 >
-                    INTERVIEW ROOM ASSIGNMENT
+                   QUALIFYING / INTERVIEW ROOM ASSIGNMENT
                 </Typography>
 
 
@@ -317,7 +318,7 @@ const AssignInterviewExam = () => {
                                     : "0px 2px 6px rgba(0,0,0,0.15)",
                             transition: "0.3s ease",
                             "&:hover": {
-                                backgroundColor: activeStep === index ? "#5a1c1c" : "#f5d98f",
+                                backgroundColor: activeStep === index ? "#000" : "#f5d98f",
                             },
                         }}
                     >

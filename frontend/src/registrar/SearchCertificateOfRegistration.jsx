@@ -70,7 +70,7 @@ const SearchCertificateOfRegistration = () => {
   const [loading, setLoading] = useState(false);
 
 
-  const pageId = 59;
+  const pageId = 56;
 
   const [employeeID, setEmployeeID] = useState("");
 

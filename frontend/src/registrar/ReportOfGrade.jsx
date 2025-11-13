@@ -118,7 +118,7 @@ const ReportOfGrade = () => {
     const [loading, setLoading] = useState(false);
 
 
-    const pageId = 58;
+    const pageId = 50;
 
     const [employeeID, setEmployeeID] = useState("");
 
@@ -469,7 +469,7 @@ const ReportOfGrade = () => {
                                         : "0px 2px 6px rgba(0,0,0,0.15)",
                                 transition: "0.3s ease",
                                 "&:hover": {
-                                    backgroundColor: activeStep === index ? "#5a1c1c" : "#f5d98f",
+                                    backgroundColor: activeStep === index ? "#000" : "#f5d98f",
                                 },
                             }}
                         >

@@ -43,7 +43,7 @@ const InterviewerApplicantList = () => {
   const [userRole, setUserRole] = useState("");
   const [hasAccess, setHasAccess] = useState(null);
   const [loading, setLoading] = useState(false);
-  const pageId = 26;
+  const pageId = 36;
 
 
 
@@ -148,18 +148,19 @@ const InterviewerApplicantList = () => {
   const firstLine = words.slice(0, middle).join(" ");
   const secondLine = words.slice(middle).join(" ");
 
+   const tabs = [
+        { label: "Admission Process For College", to: "/applicant_list", icon: <SchoolIcon fontSize="large" /> },
+        { label: "Applicant Form", to: "/registrar_dashboard1", icon: <AssignmentIcon fontSize="large" /> },
+        { label: "Student Requirements", to: "/registrar_requirements", icon: <AssignmentTurnedInIcon fontSize="large" /> },
+        { label: "Qualifying / Interview Room Assignment", to: "/assign_qualifying_interview_exam", icon: <MeetingRoomIcon fontSize="large" /> },
+        { label: "Qualifying / Interview Schedule Management", to: "/assign_schedule_applicants_qualifying_interview", icon: <ScheduleIcon fontSize="large" /> },
+        { label: "Qualifying / Interviewer Applicant's List", to: "/qualifying_interviewer_applicant_list", icon: <PeopleIcon fontSize="large" /> },
+        { label: "Qualifying / Interview Exam Score", to: "/qualifying_interview_exam_scores", icon: <PersonSearchIcon fontSize="large" /> },
+        { label: "Student Numbering", to: "/student_numbering_per_college", icon: <DashboardIcon fontSize="large" /> },
+    ];
 
 
-  const tabs = [
-    { label: "Admission Process For College", to: "/applicant_list", icon: <SchoolIcon fontSize="large" /> },
-    { label: "Applicant Form", to: "/registrar_dashboard1", icon: <AssignmentIcon fontSize="large" /> },
-    { label: "Student Requirements", to: "/registrar_requirements", icon: <AssignmentTurnedInIcon fontSize="large" /> },
-    { label: "Interview Room Assignment", to: "/assign_interview_exam", icon: <MeetingRoomIcon fontSize="large" /> },
-    { label: "Interview Schedule Management", to: "/assign_schedule_applicants_interview", icon: <ScheduleIcon fontSize="large" /> },
-    { label: "Interviewer Applicant's List", to: "/interviewer_applicant_list", icon: <PeopleIcon fontSize="large" /> },
-    { label: "Qualifying / Interview Exam Score", to: "/qualifying_exam_scores", icon: <PersonSearchIcon fontSize="large" /> },
-    { label: "Student Numbering", to: "/student_numbering_per_college", icon: <DashboardIcon fontSize="large" /> },
-  ];
+
   const navigate = useNavigate();
   const [activeStep, setActiveStep] = useState(5);
   const [clickedSteps, setClickedSteps] = useState(Array(tabs.length).fill(false));
@@ -246,7 +247,7 @@ const InterviewerApplicantList = () => {
     const htmlContent = `
     <html>
       <head>
-        <title>Interviewer Applicant List</title>
+        <title>Qualifyin / Interviewer Applicant List</title>
         <style>
           @page { size: A4; margin: 10mm; }
           body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
@@ -317,7 +318,7 @@ const InterviewerApplicantList = () => {
 
               <div style="margin-top: 25px;">
                 <b style="font-size: 22px; letter-spacing: 1px;">
-                  Interviewer Applicant List
+                  Qualifying / Interviewer Applicant List
                 </b>
               </div>
             </div>
@@ -463,12 +464,12 @@ const InterviewerApplicantList = () => {
             fontSize: "36px",
           }}
         >
-          INTERVIEWER APPLICANT LIST
+          QUALIFYING / INTERVIEWER APPLICANT LIST
         </Typography>
 
         <TextField
           variant="outlined"
-          placeholder="Search Interviewer Name / Email"
+          placeholder="Search Qualifying / Interviewer Name / Email"
           size="small"
 
           value={searchQuery}

@@ -62,7 +62,7 @@ const SuperAdminFacultyResetPassword = () => {
   const [loading, setLoading] = useState(false);
   const [resetMsg, setResetMsg] = useState("");
   const [searchError, setSearchError] = useState("");
-  const pageId = 85;
+  const pageId = 82;
 
   const [employeeID, setEmployeeID] = useState("");
 

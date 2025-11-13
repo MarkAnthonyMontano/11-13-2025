@@ -79,7 +79,7 @@ function Announcement() {
     const [loading, setLoading] = useState(false);
 
 
-    const pageId = 69;
+    const pageId = 66;
 
     const [employeeID, setEmployeeID] = useState("");
 

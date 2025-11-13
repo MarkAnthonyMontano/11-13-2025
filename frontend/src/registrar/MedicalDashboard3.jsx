@@ -122,7 +122,7 @@ const MedicalDashboard3 = () => {
     const [hasAccess, setHasAccess] = useState(null);
     const [loading, setLoading] = useState(false);
 
-    const pageId = 31;
+    const pageId = 27;
 
     const [employeeID, setEmployeeID] = useState("");
 
@@ -526,7 +526,7 @@ const MedicalDashboard3 = () => {
                                         : "0px 2px 6px rgba(0,0,0,0.15)",
                                 transition: "0.3s ease",
                                 "&:hover": {
-                                    backgroundColor: currentStep === index ? "#5a1c1c" : "#f5d98f",
+                                    backgroundColor: currentStep === index ? "#000" : "#f5d98f",
                                 },
                             }}
                         >

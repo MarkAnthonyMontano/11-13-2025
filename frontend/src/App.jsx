@@ -72,16 +72,15 @@ import ApplicantList from './registrar/ApplicantList';
 import ApplicantListAdmin from './registrar/ApplicantListAdmin';
 import StudentRequirements from './registrar/StudentRequirements';
 import RegistrarRequirements from './registrar/RegistrarRequirements';
-import ExaminationProfile from './registrar/ExaminationProfile';
 import RegistrarExaminationProfile from './registrar/RegistrarExaminationProfile';
 import AssignScheduleToApplicants from './registrar/AssignScheduleToApplicants';
 import AssignEntranceExam from './registrar/AssignEntranceExam';
 import ProctorApplicantList from './registrar/ProctorApplicantList';
 import ApplicantScoring from './registrar/ApplicantScoring';
-import QualifyingExamScore from './registrar/QualifyingExamScore';
-import InterviewerApplicantList from './registrar/InterviewerApplicantList';
-import AssignInterviewExam from './registrar/AssignInterviewExam';
-import AssignScheduleToApplicantsInterviewer from './registrar/AssignScheduleToApplicantsInterviewer';
+import QualifyingInterviewExamScore from './registrar/QualifyingInterviewExamScore';
+import QualifyingInterviewerApplicantList from './registrar/QualifyingInterviewerApplicantList';
+import AssignQualifyingInterviewExam from './registrar/AssignQualifyingInterviewExam';
+import AssignScheduleToApplicantsQualifyingInterviewer from './registrar/AssignScheduleToApplicantsQualifyingInterviewer';
 import ClassRoster from './registrar/ClassRoster';
 import DepartmentRegistration from './registrar/DprtmntRegistration';
 import DepartmentRoom from './registrar/DprtmntRoom';
@@ -259,7 +258,7 @@ function App() {
               {/* Sidebar */}
               {isAuthenticated && (
                 <aside className="min-w-[21rem] min-h-full">
-                  <SideBar setIsAuthenticated={setIsAuthenticated} profileImage={profileImage} setProfileImage={setProfileImage}/>
+                  <SideBar setIsAuthenticated={setIsAuthenticated} profileImage={profileImage} setProfileImage={setProfileImage} />
                 </aside>
               )}
 
@@ -271,7 +270,7 @@ function App() {
                   sx={{
                     zIndex: (theme) => theme.zIndex.drawer + 1,
                     bgcolor: settings?.header_color || "#1976d2",
-                
+
 
                   }}
                 >
@@ -302,7 +301,7 @@ function App() {
                 </AppBar>
 
                 {/* ✅ Main content area */}
-                <main className="flex-1 w-full mt-[64px] pb-[40px]" style={{marginTop: "5rem"}}>
+                <main className="flex-1 w-full mt-[64px] pb-[40px]" style={{ marginTop: "5rem" }}>
                   {/* Add your routes here later */}
 
 
@@ -328,9 +327,9 @@ function App() {
                     <Route path="/superadmin_registrar_reset_password" element={<ProtectedRoute><SuperAdminRegistrarPassword /></ProtectedRoute>} />
 
 
-                    <Route path="/registrar_dashboard" element={<ProtectedRoute><RegistrarDashboard profileImage={profileImage} setProfileImage={setProfileImage}/></ProtectedRoute>} />
-                    <Route path="/faculty_dashboard" element={<ProtectedRoute allowedRoles={['faculty']}><FacultyDashboard profileImage={profileImage} setProfileImage={setProfileImage}/></ProtectedRoute>} />
-                    <Route path="/applicant_dashboard" element={<ProtectedRoute><ApplicantDashboard profileImage={profileImage} setProfileImage={setProfileImage}/></ProtectedRoute>} />
+                    <Route path="/registrar_dashboard" element={<ProtectedRoute><RegistrarDashboard profileImage={profileImage} setProfileImage={setProfileImage} /></ProtectedRoute>} />
+                    <Route path="/faculty_dashboard" element={<ProtectedRoute allowedRoles={['faculty']}><FacultyDashboard profileImage={profileImage} setProfileImage={setProfileImage} /></ProtectedRoute>} />
+                    <Route path="/applicant_dashboard" element={<ProtectedRoute><ApplicantDashboard profileImage={profileImage} setProfileImage={setProfileImage} /></ProtectedRoute>} />
                     <Route path="/register_prof" element={<ProtectedRoute><RegisterProf /></ProtectedRoute>} />
                     <Route path="/register_registrar" element={<ProtectedRoute><RegisterRegistrar /></ProtectedRoute>} />
                     <Route path="/register_student" element={<ProtectedRoute><RegisterStudent /></ProtectedRoute>} />
@@ -345,7 +344,7 @@ function App() {
                     <Route path="/curriculum_panel" element={<ProtectedRoute><CurriculumPanel /></ProtectedRoute>} />
                     <Route path="/department_registration" element={<ProtectedRoute><DepartmentRegistration /></ProtectedRoute>} />
                     <Route path="/section_panel" element={<ProtectedRoute><SectionPanel /></ProtectedRoute>} />
-               
+
                     <Route path="/year_level_panel" element={<ProtectedRoute><YearLevelPanel /></ProtectedRoute>} />
                     <Route path="/year_panel" element={<ProtectedRoute><YearPanel /></ProtectedRoute>} />
                     <Route path="/year_update_panel" element={<ProtectedRoute><YearUpdateForm /></ProtectedRoute>} />
@@ -372,9 +371,9 @@ function App() {
                     <Route path="/assign_schedule_applicant" element={<ProtectedRoute><AssignScheduleToApplicants /></ProtectedRoute>} />
                     <Route path="/applicant_scoring" element={<ProtectedRoute><ApplicantScoring /></ProtectedRoute>} />
 
-                    <Route path="/assign_interview_exam" element={<ProtectedRoute><AssignInterviewExam /></ProtectedRoute>} />
-                    <Route path="/assign_schedule_applicants_interview" element={<ProtectedRoute><AssignScheduleToApplicantsInterviewer /></ProtectedRoute>} />
-                    <Route path="/interviewer_applicant_list" element={<ProtectedRoute><InterviewerApplicantList /></ProtectedRoute>} />
+                    <Route path="/assign_qualifying_interview_exam" element={<ProtectedRoute><AssignQualifyingInterviewExam /></ProtectedRoute>} />
+                    <Route path="/assign_schedule_applicants_qualifying_interview" element={<ProtectedRoute><AssignScheduleToApplicantsQualifyingInterviewer /></ProtectedRoute>} />
+                    <Route path="/qualifying_interviewer_applicant_list" element={<ProtectedRoute><QualifyingInterviewerApplicantList /></ProtectedRoute>} />
 
 
                     <Route path="/grading_sheet" element={<ProtectedRoute><GradingSheet /></ProtectedRoute>} />
@@ -382,7 +381,7 @@ function App() {
                     <Route path="/faculty_evaluation" element={<ProtectedRoute><FacultyEvaluation /></ProtectedRoute>} />
                     <Route path="/faculty_masterlist" element={<ProtectedRoute><FacultyMasterList /></ProtectedRoute>} />
                     <Route path="/program_evaluation" element={<ProtectedRoute><ProgramEvaluation /></ProtectedRoute>} />
-                    <Route path="/student_dashboard" element={<ProtectedRoute allowedRoles={'student'}><StudentDashboard profileImage={profileImage} setProfileImage={setProfileImage}/></ProtectedRoute>} />
+                    <Route path="/student_dashboard" element={<ProtectedRoute allowedRoles={'student'}><StudentDashboard profileImage={profileImage} setProfileImage={setProfileImage} /></ProtectedRoute>} />
                     <Route path="/student_schedule" element={<ProtectedRoute allowedRoles={'student'}><StudentSchedule /></ProtectedRoute>} />
                     <Route path="/grades_page" element={<ProtectedRoute><StudentGradingPage allowedRoles={'student'} /></ProtectedRoute>} />
                     <Route path="/student_faculty_evaluation" element={<ProtectedRoute allowedRoles={'student'}><StudentFacultyEvaluation /></ProtectedRoute>} />
@@ -394,11 +393,11 @@ function App() {
                     <Route path="/applicant_list_admin" element={<ProtectedRoute><ApplicantListAdmin /></ProtectedRoute>} />
                     <Route path="/super_admin_applicant_list" element={<ProtectedRoute><SuperAdminApplicantList /></ProtectedRoute>} />
                     <Route path="/proctor_applicant_list" element={<ProtectedRoute><ProctorApplicantList /></ProtectedRoute>} />
-            
-                
+
+
                     <Route path="/evaluation_crud" element={<ProtectedRoute><EvaluationCRUD /></ProtectedRoute>} />
 
-                    <Route path="/qualifying_exam_scores" element={<ProtectedRoute><QualifyingExamScore /></ProtectedRoute>} />
+                    <Route path="/qualifying_interview_exam_scores" element={<ProtectedRoute><QualifyingInterviewExamScore /></ProtectedRoute>} />
 
                     <Route
                       path="/settings"
@@ -466,7 +465,7 @@ function App() {
                     <Route path="/super_admin_student_dashboard4" element={<ProtectedRoute><SuperAdminStudentDashboard4 /></ProtectedRoute>} />
                     <Route path="/super_admin_student_dashboard5" element={<ProtectedRoute><SuperAdminStudentDashboard5 /></ProtectedRoute>} />
 
-      <Route path="/super_admin_room_registration" element={<ProtectedRoute><SuperAdminRoomRegistration /></ProtectedRoute>} />
+                    <Route path="/super_admin_room_registration" element={<ProtectedRoute><SuperAdminRoomRegistration /></ProtectedRoute>} />
 
 
                     <Route path="/applicant_dashboard" element={<ProtectedRoute allowedRoles={['applicant']}><ApplicantDashboard /></ProtectedRoute>} />
@@ -482,7 +481,7 @@ function App() {
                     <Route path="/registrar_requirements" element={<ProtectedRoute><RegistrarRequirements /></ProtectedRoute>} />
                     <Route path="/admin_ecat_application_form" element={<ProtectedRoute allowedRoles={['registrar']}><AdminECATApplicationForm /></ProtectedRoute>} />
                     <Route path="/admin_personal_data_form" element={<ProtectedRoute allowedRoles={['registrar']}><AdminPersonalDataForm /></ProtectedRoute>} />
-                                        <Route path="/admin_admission_form_process" element={<ProtectedRoute allowedRoles={['registrar']}><AdminAdmissionFormProcess /></ProtectedRoute>} />
+                    <Route path="/admin_admission_form_process" element={<ProtectedRoute allowedRoles={['registrar']}><AdminAdmissionFormProcess /></ProtectedRoute>} />
                     <Route path="/admin_office_of_the_registrar" element={<ProtectedRoute allowedRoles={['registrar']}><AdminOfficeOfTheRegistrar /></ProtectedRoute>} />
                     <Route path="/personal_data_form" element={<ProtectedRoute allowedRoles={['applicant']}><PersonalDataForm /></ProtectedRoute>} />
                     <Route path="/ecat_application_form" element={<ProtectedRoute allowedRoles={['applicant']}><ECATApplicationForm /></ProtectedRoute>} />
@@ -493,7 +492,7 @@ function App() {
 
                     <Route path="/class_roster" element={<ProtectedRoute ><ClassRoster /></ProtectedRoute>} />
                     <Route path="/transcript_of_records" element={<ProtectedRoute ><TranscriptOfRecords /></ProtectedRoute>} />
-                 
+
                     <Route path="/email_template_manager" element={<ProtectedRoute><EmailTemplateManager /></ProtectedRoute>} />
                     <Route path="/announcement" element={<ProtectedRoute><Announcement /></ProtectedRoute>} />
                     <Route path="/exam-permit/:applicant_number" element={<ExamPermit />} />
@@ -505,10 +504,7 @@ function App() {
                     <Route path="/student_admission_services" element={<ProtectedRoute allowedRoles={['student']} ><StudentAdmissionServices /></ProtectedRoute>} />
                     <Route path="/student_form_process" element={<ProtectedRoute allowedRoles={['student', 'registrar', 'applicant']}><StudentAdmissionFormProcess /></ProtectedRoute>} />
 
-                    {/* Admission Examination Profile */}
-                    <Route path="/examination_profile" element={<ExaminationProfile />} />
-                    <Route path="/examination_profile/:applicantNumber" element={<ExaminationProfile />} />
-
+        
                     {/*Public Examination Profile */}
                     <Route path="/applicant_profile" element={<ApplicantProfile />} />
                     <Route path="/applicant_profile/:applicantNumber" element={<ApplicantProfile />} />

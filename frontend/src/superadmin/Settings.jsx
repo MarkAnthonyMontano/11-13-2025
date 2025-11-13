@@ -44,7 +44,7 @@ function Settings({ onUpdate }) {
 
     const [hasAccess, setHasAccess] = useState(null);
     const [loading, setLoading] = useState(false);
-    const pageId = 77;
+    const pageId = 74;
 
     useEffect(() => {
         const storedRole = localStorage.getItem("role");

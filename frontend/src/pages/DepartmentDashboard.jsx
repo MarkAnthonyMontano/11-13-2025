@@ -30,7 +30,7 @@ const DepartmentManagement = () => {
   // ✅ access map
   const [userAccessList, setUserAccessList] = useState({});
 
-  const pageId = 95; // Department Management
+  const pageId = 94; // Department Management
 
   // Load theme
   useEffect(() => {
@@ -100,7 +100,7 @@ const DepartmentManagement = () => {
     {
       label: "DEPARTMENT MANAGEMENT",
       items: [
-        { title: "SCHEDULE PLOTTING FORM", link: "/select_college", icon: EventNote, page_id: 56 },
+        { title: "SCHEDULE PLOTTING FORM", link: "/select_college", icon: EventNote, page_id: 53 },
         { title: "DEPARTMENT SECTION PANEL", link: "/department_section_panel", icon: Apartment, page_id: 20 },
         { title: "DEPARTMENT PANEL", link: "/department_registration", icon: Assignment, page_id: 21 },
         { title: "DEPARTMENT ROOM PANEL", link: "/department_room", icon: MeetingRoom, page_id: 22 },

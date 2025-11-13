@@ -32,7 +32,7 @@ const SectionPanel = () => {
   const [hasAccess, setHasAccess] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const pageId = 60;
+  const pageId = 57;
 
   const [description, setDescription] = useState('');
   const [sections, setSections] = useState([]);
